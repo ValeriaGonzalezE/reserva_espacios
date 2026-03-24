@@ -1,2 +1,124 @@
 /* For information on how to create your own theme, please refer to:
 http://ionicframework.com/docs/theming/ */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1a0000, #330000);
+}
+
+/* CONTENEDOR PRINCIPAL */
+.wrapper {
+  position: relative;
+  width: 850px;
+  height: 500px;
+  background: transparent;
+  border: 2px solid #ff2e63;
+  box-shadow: 0 0 25px #ff2e63;
+  overflow: hidden;
+  border-radius: 10px;
+  display: flex;
+}
+
+.page-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+
+/* FORMULARIOS */
+.form-box {
+  width: 50%;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* IZQUIERDA */
+.info-text {
+  position: relative;
+  width: 50%;
+  background: linear-gradient(135deg, #ff2e63, #8b0000);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 30px;
+  font-weight: bold;
+  clip-path: polygon(0 0, 100% 0, 70% 100%, 0% 100%);
+}
+
+/* INPUTS */
+.input-box {
+  margin: 15px 0;
+}
+
+.input-box input {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-bottom: 2px solid #ff2e63;
+  background: transparent;
+  color: white;
+  outline: none;
+}
+
+/* BOTÓN */
+button {
+  margin-top: 20px;
+  padding: 10px;
+  border: none;
+  background: #ff2e63;
+  color: white;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #c70039;
+}
+
+/* LINKS */
+.links {
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.links a {
+  color: #ff2e63;
+  text-decoration: none;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .wrapper {
+    flex-direction: column;
+    width: 90%;
+    height: auto;
+  }
+
+  .form-box,
+  .info-text {
+    width: 100%;
+    height: auto;
+  }
+
+  .info-text {
+    padding: 20px;
+    font-size: 24px;
+    clip-path: none;
+  }
+}
