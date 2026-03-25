@@ -1,56 +1,113 @@
 <template>
   <ion-page>
-    <ion-header :translucent="true">
-      <ion-toolbar>
-        <ion-title>Blank</ion-title>
-      </ion-toolbar>
-    </ion-header>
+    <div class="layout">
 
-    <ion-content :fullscreen="true">
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-title size="large">Blank</ion-title>
-        </ion-toolbar>
-      </ion-header>
-
-      <div id="container">
-        <strong>Ready to create an app?</strong>
-        <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+      <!-- HEADER -->
+      <div class="header">
+        <button @click="toggleMenu">☰</button>
+        <h2>Salones</h2>
       </div>
-    </ion-content>
+
+      <!-- MENU -->
+      <div class="menu" v-if="showMenu">
+        <p @click="goHome">🏠 Inicio</p>
+        <p @click="goCreate">➕ Crear reserva</p>
+        <p @click="goProfile">👤 Perfil</p>
+        <p @click="logout">🚪 Cerrar sesión</p>
+      </div>
+
+      <!-- LISTA -->
+      <div class="content">
+        <div class="card" v-for="salon in salones" :key="salon.id">
+          <h3>{{ salon.nombre }}</h3>
+          <p>{{ salon.estado }}</p>
+        </div>
+      </div>
+
+    </div>
   </ion-page>
 </template>
 
-<script setup lang="ts">
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
+<script setup>
+import { IonPage } from '@ionic/vue'
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import { useUserStore } from "@/stores/UserStore";
+
+const router = useRouter();
+const userStore = useUserStore();
+
+const showMenu = ref(false);
+
+const salones = ref([
+  { id: 1, nombre: "Sala A", estado: "Disponible" },
+  { id: 2, nombre: "Sala B", estado: "Ocupado" },
+  { id: 3, nombre: "Auditorio", estado: "Disponible" }
+]);
+
+const toggleMenu = () => showMenu.value = !showMenu.value;
+
+const goHome = () => {
+  showMenu.value = false;
+  router.push("/home");
+};
+
+const goCreate = () => {
+  router.push("/create");
+};
+
+const goProfile = () => {
+  router.push("/profile");
+};
+
+const logout = () => {
+  userStore.logout();
+  router.push("/login");
+};
 </script>
 
-<style scoped>
-#container {
-  text-align: center;
-  
+<style>
+.layout {
+  background: #0f0f0f;
+  color: white;
+  height: 100vh;
+}
+
+/* HEADER */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #c70039;
+  padding: 15px;
+}
+
+/* MENU */
+.menu {
   position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 60px;
+  left: 10px;
+  background: #1a1a1a;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px #c70039;
 }
 
-#container strong {
-  font-size: 20px;
-  line-height: 26px;
+.menu p {
+  margin: 10px 0;
+  cursor: pointer;
 }
 
-#container p {
-  font-size: 16px;
-  line-height: 22px;
-  
-  color: #8c8c8c;
-  
-  margin: 0;
+/* CONTENT */
+.content {
+  padding: 20px;
 }
 
-#container a {
-  text-decoration: none;
+/* CARDS */
+.card {
+  background: #1e1e1e;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-left: 5px solid #c70039;
 }
 </style>
