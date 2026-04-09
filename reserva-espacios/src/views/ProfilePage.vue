@@ -1,9 +1,17 @@
 <template>
   <ion-page>
     <div class="container">
-      <h2>Perfil</h2>
-      <p v-if="user">Usuario: {{ user.nombre }}</p>
-        <p v-else>No hay usuario</p>
+      <div class="profile">
+
+        <img src="https://i.imgur.com/6VBx3io.png" class="avatar" />
+
+        <h2>{{ user?.nombre }}</h2>
+
+        <p>📧 {{ user?.email }}</p>
+        <p>🆔 {{ user?.codigo }}</p>
+        <p>👤 {{ user?.rol }}</p>
+
+      </div>
     </div>
   </ion-page>
 </template>
@@ -23,4 +31,18 @@ const user = userStore.user;
   height: 100vh;
   padding: 20px;
 }
+
+.profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+}
+
+.avatar {
+  width: 120px;
+  border-radius: 50%;
+  margin-bottom: 15px;
+}
+
 </style>
