@@ -96,7 +96,7 @@ app.post("/forgot-password", (req, res) => {
       return res.json({ success: false, message: "Correo no existe" });
     }
 
-    // Simulación (luego puedes enviar correo real)
+    // Simulación
     res.json({
       success: true,
       message: "Correo enviado (simulado)"
@@ -107,4 +107,91 @@ app.post("/forgot-password", (req, res) => {
 
 app.listen(3000, () => {
   console.log("Servidor en puerto 3000");
+});
+
+// ============= ESPACIOS ===================
+
+app.get("/espacios", (req, res) => {
+  const sql = `
+    SELECT 
+      e.id,
+      e.nombre,
+      e.capacidad,
+      e.ubicacion,
+      t.nombre AS tipo
+    FROM espacios e
+    JOIN tipos_espacio t ON e.tipo_id = t.id
+    WHERE e.estado = 'activo'
+  `;
+
+  db.query(sql, (err, result) => {
+    if (err) return res.status(500).json(err);
+
+    res.json(result);
+  });
+});
+
+
+//para saber si esta ocupado o con disponibilidad
+
+app.get("/espacios-disponibilidad", (req, res) => {
+
+  const fecha = req.query.fecha;
+
+  const sql = `
+    SELECT 
+      e.id,
+      e.nombre,
+      e.ubicacion,
+      t.nombre AS tipo,
+      CASE 
+        WHEN r.id IS NULL THEN 'Disponible'
+        ELSE 'Ocupado'
+      END AS estado
+    FROM espacios e
+    JOIN tipos_espacio t ON e.tipo_id = t.id
+    LEFT JOIN reservas r 
+      ON e.id = r.espacio_id 
+      AND r.fecha = ?
+      AND r.estado = 'activa'
+  `;
+
+  db.query(sql, [fecha], (err, result) => {
+    if (err) return res.status(500).json(err);
+
+    res.json(result);
+  });
+});
+
+
+//================ RESERVAS ===============
+
+app.post("/reservas", (req, res) => {
+  const { usuario_id, espacio_id, fecha, hora_inicio, hora_fin } = req.body;
+
+  const validar = `
+    SELECT * FROM reservas
+    WHERE espacio_id = ?
+    AND fecha = ?
+    AND (
+      hora_inicio < ? AND hora_fin > ?
+    )
+  `;
+
+  db.query(validar, [espacio_id, fecha, hora_fin, hora_inicio], (err, result) => {
+    if (result.length > 0) {
+      return res.json({ success: false, message: "Horario ocupado" });
+    }
+
+    const insert = `
+      INSERT INTO reservas (usuario_id, espacio_id, fecha, hora_inicio, hora_fin)
+      VALUES (?, ?, ?, ?, ?)
+    `;
+
+    db.query(insert, [usuario_id, espacio_id, fecha, hora_inicio, hora_fin], (err2) => {
+      if (err2) return res.status(500).json(err2);
+
+      res.json({ success: true });
+    });
+  });
 });
