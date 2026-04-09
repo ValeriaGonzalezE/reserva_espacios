@@ -18,11 +18,20 @@
 
       <!-- LISTA -->
       <div class="content">
-        <div class="card" v-for="salon in salones" :key="salon.id">
-          <h3>{{ salon.nombre }}</h3>
-          <p>{{ salon.estado }}</p>
-        </div>
+        <input type="date" v-model="fecha" @change="cargarEspacios" />
+
+          <div class="card" v-for="salon in salones" :key="salon.id">
+            <h3>{{ salon.nombre }}</h3>
+
+            <p>📍 {{ salon.ubicacion }}</p>
+            <p>🏷 {{ salon.tipo }}</p>
+
+            <p :class="salon.estado === 'Disponible' ? 'ok' : 'bad'">
+              {{ salon.estado }}
+            </p>
+          </div>
       </div>
+
 
     </div>
   </ion-page>
@@ -30,20 +39,28 @@
 
 <script setup>
 import { IonPage } from '@ionic/vue'
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/UserStore";
+
+import api from "@/services/api";
 
 const router = useRouter();
 const userStore = useUserStore();
 
-const showMenu = ref(false);
+const salones = ref([]);
+const fecha = ref(new Date().toISOString().split("T")[0]);
 
-const salones = ref([
-  { id: 1, nombre: "Sala A", estado: "Disponible" },
-  { id: 2, nombre: "Sala B", estado: "Ocupado" },
-  { id: 3, nombre: "Auditorio", estado: "Disponible" }
-]);
+const cargarEspacios = async () => {
+  const res = await api.get(`/espacios-disponibilidad?fecha=${fecha.value}`);
+  salones.value = res.data;
+};
+
+onMounted(() => {
+  cargarEspacios();
+});
+
+const showMenu = ref(false);
 
 const toggleMenu = () => showMenu.value = !showMenu.value;
 
@@ -109,5 +126,13 @@ const logout = () => {
   padding: 15px;
   margin-bottom: 10px;
   border-left: 5px solid #c70039;
+}
+
+.ok {
+  color: #00ff9d;
+}
+
+.bad {
+  color: #ff4d4d;
 }
 </style>
