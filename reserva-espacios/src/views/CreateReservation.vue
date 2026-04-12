@@ -1,21 +1,46 @@
 <template>
   <ion-page>
     <div class="container">
-      <h2>Crear Reserva</h2>
 
-      <input type="date" v-model="fecha" @change="cargarDisponibles" />
+      <div class="back-btn" @click="$router.back()"><</div>
 
-        <select v-model="espacioSeleccionado">
-          <option disabled value="">Seleccione espacio</option>
-          <option v-for="e in espacios" :key="e.id" :value="e.id">
-            {{ e.nombre }} - {{ e.tipo }}
-          </option>
-        </select>
+        <h2>Crear Reserva</h2>
 
-      <input type="time" v-model="horaInicio" />
-      <input type="time" v-model="horaFin" />
+        <!-- FECHA -->
+        <div class="input-group">
+          <br>
+          <label>Fecha: </label>
+          <input type="date" v-model="fecha" @change="cargarDisponibles" />
+        </div>
 
-      <button @click="reservar">Reservar</button>
+        <!-- ESPACIO -->
+        <div class="input-group">
+          <br>
+          <label>Espacio disponible: </label>
+          <select v-model="espacioSeleccionado">
+            <option disabled value=""> Seleccione </option>
+            <option v-for="e in espacios" :key="e.id" :value="e.id">
+              {{ e.nombre }} ({{ e.tipo }})
+            </option>
+          </select>
+      </div>
+
+        <!-- HORAS -->
+        <div class="horas">
+          <br>
+          <div class="input-group">
+            <label>Hora inicio: </label>
+            <input type="time" v-model="horaInicio" />
+          </div>
+          <br>
+          <div class="input-group">
+            <label>Hora fin: </label>
+            <input type="time" v-model="horaFin" />
+          </div>
+
+        </div>
+
+        <button @click="reservar">Reservar</button>
 
     </div>
   </ion-page>
@@ -57,9 +82,38 @@ const reservar = async () => {
 
 <style>
 .container {
+  padding: 20px;
   background: #0f0f0f;
   color: white;
-  height: 100vh;
-  padding: 20px;
+  min-height: 100vh;
 }
+
+.back-btn {
+  color: white;
+  cursor: pointer;
+  margin-bottom: 15px;
+  font-size: 25px;
+}
+
+.input-group {
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.input-group label {
+  margin-bottom: 5px;
+}
+
+input, select {
+  padding: 8px;
+  border-radius: 5px;
+  border: none;
+}
+
+.horas {
+  display: flex;
+  gap: 10px;
+}
+
 </style>

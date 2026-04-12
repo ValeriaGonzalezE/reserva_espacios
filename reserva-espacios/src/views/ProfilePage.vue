@@ -1,15 +1,14 @@
 <template>
   <ion-page>
     <div class="container">
+      <div class="back-btn" @click="$router.back()"><</div>
       <div class="profile">
 
-        <img src="https://i.imgur.com/6VBx3io.png" class="avatar" />
+        <img src="https://cdn-icons-png.flaticon.com/128/13464/13464146.png" class="avatar" />
 
-        <h2>{{ user?.nombre }}</h2>
+        <h2>👤 {{ user?.rol }}:   {{ user?.nombre }}</h2>
 
         <p>📧 {{ user?.email }}</p>
-        <p>🆔 {{ user?.codigo }}</p>
-        <p>👤 {{ user?.rol }}</p>
 
       </div>
     </div>
@@ -32,6 +31,13 @@ const user = userStore.user;
   padding: 20px;
 }
 
+.back-btn {
+  color: white;
+  cursor: pointer;
+  margin-bottom: 15px;
+  font-size: 25px;
+}
+
 .profile {
   display: flex;
   flex-direction: column;
@@ -43,6 +49,7 @@ const user = userStore.user;
   width: 120px;
   border-radius: 50%;
   margin-bottom: 15px;
+  background-color: white;
 }
 
 </style>

@@ -1,24 +1,25 @@
 <template>
   <ion-page>
-    <div class="layout">
+    <ion-content>
+      <div class="layout">
 
-      <!-- HEADER -->
-      <div class="header">
-        <button @click="toggleMenu">☰</button>
-        <h2>Salones</h2>
-      </div>
+        <!-- HEADER -->
+        <div class="header">
+          <button @click="toggleMenu" class="btn-menu">☰</button>
+          <h2>Espacios</h2>
+        </div>
 
-      <!-- MENU -->
-      <div class="menu" v-if="showMenu">
-        <p @click="goHome">🏠 Inicio</p>
-        <p @click="goCreate">➕ Crear reserva</p>
-        <p @click="goProfile">👤 Perfil</p>
-        <p @click="logout">🚪 Cerrar sesión</p>
-      </div>
+        <!-- MENU -->
+        <div class="menu" v-if="showMenu">
+          <p @click="goHome">🏠 Inicio</p>
+          <p @click="goCreate">➕ Crear reserva</p>
+          <p @click="goProfile">👤 Perfil</p>
+          <p @click="logout">🚪 Cerrar sesión</p>
+        </div>
 
-      <!-- LISTA -->
-      <div class="content">
-        <input type="date" v-model="fecha" @change="cargarEspacios" />
+        <!-- LISTA -->
+        <div class="content">
+          <input type="date" v-model="fecha" @change="cargarEspacios" />
 
           <div class="card" v-for="salon in salones" :key="salon.id">
             <h3>{{ salon.nombre }}</h3>
@@ -30,10 +31,11 @@
               {{ salon.estado }}
             </p>
           </div>
+        </div>
+
+
       </div>
-
-
-    </div>
+    </ion-content>
   </ion-page>
 </template>
 
@@ -87,7 +89,11 @@ const logout = () => {
 .layout {
   background: #0f0f0f;
   color: white;
-  height: 100vh;
+  min-height: 100vh;
+}
+
+.btn-menu {
+  border-radius: 50%;
 }
 
 /* HEADER */
@@ -118,6 +124,7 @@ const logout = () => {
 /* CONTENT */
 .content {
   padding: 20px;
+  overflow-y: auto;
 }
 
 /* CARDS */
