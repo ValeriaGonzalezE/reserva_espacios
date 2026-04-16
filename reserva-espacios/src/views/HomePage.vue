@@ -6,33 +6,61 @@
         <!-- HEADER -->
         <div class="header">
           <button @click="toggleMenu" class="btn-menu">☰</button>
-          <h2>Espacios</h2>
+          <h2>Espacios Disponibles</h2>
         </div>
 
         <!-- MENU -->
         <div class="menu" v-if="showMenu">
           <p @click="goHome">🏠 Inicio</p>
-          <p @click="goCreate">➕ Crear reserva</p>
+          <p @click="goCreateSpace">➕ Crear espacio</p>
+          <p @click="goMyReservations">📖 Mis reservas</p>
+          <p @click="goMySpaces">🏢 Mis espacios</p>
           <p @click="goProfile">👤 Perfil</p>
           <p @click="logout">🚪 Cerrar sesión</p>
         </div>
 
-        <!-- LISTA -->
-        <div class="content">
-          <input type="date" v-model="fecha" @change="cargarEspacios" />
+        <!-- FILTROS -->
+        <div class="filters">
+          <input type="date" v-model="fecha" />
 
-          <div class="card" v-for="salon in salones" :key="salon.id">
-            <h3>{{ salon.nombre }}</h3>
+          <select v-model="tipo">
+            <option value="">Todos</option>
+            <option v-for="t in tipos" :key="t.id" :value="t.nombre">
+              {{ t.nombre }}
+            </option>
+          </select>
 
-            <p>📍 {{ salon.ubicacion }}</p>
-            <p>🏷 {{ salon.tipo }}</p>
+          <select v-model="pago">
+            <option value="">Todos</option>
+            <option value="si">De pago</option>
+            <option value="no">Gratis</option>
+          </select>
 
-            <p :class="salon.estado === 'Disponible' ? 'ok' : 'bad'">
-              {{ salon.estado }}
-            </p>
-          </div>
+          <button @click="filtrar">Filtrar</button>
         </div>
 
+        <!-- LISTA -->
+        <div class="content">
+
+          <div 
+            class="card" 
+            v-for="salon in salones" 
+            :key="salon.id" 
+            @click="verDetalle(salon)"
+          >
+            <h3>{{ salon.nombre }}</h3>
+            <p>📍Ubicación: {{ salon.ubicacion }}</p>
+            <p>Tipo de lugar: {{ salon.tipo }}</p>
+            <p :class="salon.disponibilidad === 'Disponible' ? 'ok' : 'bad'"> {{ salon.disponibilidad }} </p>
+
+          </div>
+
+          <!-- SIN RESULTADOS -->
+          <div v-if="salones.length === 0" class="no-results">
+            Sin resultados
+          </div>
+
+        </div>
 
       </div>
     </ion-content>
@@ -40,48 +68,87 @@
 </template>
 
 <script setup>
-import { IonPage } from '@ionic/vue'
-import { ref, onMounted } from "vue";
-import { useRouter } from "vue-router";
+import { IonPage, IonContent, useIonRouter } from '@ionic/vue'
+import { ref, onMounted, onActivated } from "vue";
 import { useUserStore } from "@/stores/UserStore";
-
 import api from "@/services/api";
 
-const router = useRouter();
+const ionRouter = useIonRouter();
 const userStore = useUserStore();
 
-const salones = ref([]);
+// ===== FILTROS =====
+const tipos = ref([]);
+const tipo = ref("");
+const pago = ref("");
 const fecha = ref(new Date().toISOString().split("T")[0]);
 
+// ===== LISTA =====
+const salones = ref([]);
+
+// Cargar todos
 const cargarEspacios = async () => {
-  const res = await api.get(`/espacios-disponibilidad?fecha=${fecha.value}`);
+  const res = await api.get("/espacios");
   salones.value = res.data;
 };
 
-onMounted(() => {
+// Filtrar
+const filtrar = async () => {
+  const res = await api.get(`/espacios?tipo=${tipo.value}&pago=${pago.value}`);
+  salones.value = res.data;
+};
+
+// Cargar al entrar
+onMounted(async () => {
+  await cargarEspacios();
+
+  const res = await api.get("/tipos");
+  tipos.value = res.data;
+});
+
+onActivated(() => {
   cargarEspacios();
 });
 
+// ===== MENU =====
 const showMenu = ref(false);
 
 const toggleMenu = () => showMenu.value = !showMenu.value;
 
+const cerrarMenu = () => showMenu.value = false;
+
+// ===== NAVEGACIÓN (AQUÍ ESTÁ LA CLAVE) =====
 const goHome = () => {
-  showMenu.value = false;
-  router.push("/home");
+  cerrarMenu();
+  ionRouter.push("/home");
 };
 
-const goCreate = () => {
-  router.push("/create");
+const goCreateSpace = () => {
+  cerrarMenu();
+  ionRouter.push("/create-space");
+};
+
+const goMyReservations = () => {
+  cerrarMenu();
+  ionRouter.push("/my-reservations");
+};
+
+const goMySpaces = () => {
+  cerrarMenu();
+  ionRouter.push("/my-spaces");
 };
 
 const goProfile = () => {
-  router.push("/profile");
+  cerrarMenu();
+  ionRouter.push("/profile");
+};
+
+const verDetalle = (salon) => {
+  ionRouter.push(`/space/${salon.id}`);
 };
 
 const logout = () => {
   userStore.logout();
-  router.push("/login");
+  ionRouter.push("/login");
 };
 </script>
 
@@ -92,8 +159,13 @@ const logout = () => {
   min-height: 100vh;
 }
 
+.estado{
+  color:rgb(0, 255, 38);
+}
+
 .btn-menu {
   border-radius: 50%;
+  width: 35px;
 }
 
 /* HEADER */
@@ -105,41 +177,18 @@ const logout = () => {
   padding: 15px;
 }
 
-/* MENU */
-.menu {
-  position: absolute;
-  top: 60px;
-  left: 10px;
-  background: #1a1a1a;
+/* FILTROS */
+.filters {
   padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px #c70039;
-}
-
-.menu p {
-  margin: 10px 0;
-  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 /* CONTENT */
 .content {
   padding: 20px;
-  overflow-y: auto;
 }
 
-/* CARDS */
-.card {
-  background: #1e1e1e;
-  padding: 15px;
-  margin-bottom: 10px;
-  border-left: 5px solid #c70039;
-}
-
-.ok {
-  color: #00ff9d;
-}
-
-.bad {
-  color: #ff4d4d;
-}
 </style>
+

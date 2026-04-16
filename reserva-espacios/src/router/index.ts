@@ -1,11 +1,18 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
 
+
+//modulos del menu
 import HomePage from "@/views/HomePage.vue";
-
 import CreateReservation from "@/views/CreateReservation.vue";
-
 import ProfilePage from "@/views/ProfilePage.vue";
+import CreateSpace from "@/views/CreateSpace.vue";
+import MyReservations from "@/views/MyReservations.vue";
+import MySpaces from "@/views/MySpaces.vue";
+import SpaceDetail from "@/views/SpaceDetail.vue";
+import SpaceReservations from "@/views/SpaceReservations.vue";
+import EditProfile from "@/views/EditProfile.vue";
+import SpaceEdit from '@/views/SpaceEdit.vue';
 
 // Usuarios
 import LoginPage from '../views/usuarios/LoginPage.vue';
@@ -33,17 +40,46 @@ const routes: Array<RouteRecordRaw> = [
     name: 'ForgotPassword',
     component: ForgotPasswordPage
   },
-  { 
-    path: "/home", 
-    component: HomePage 
+  //vistas menu
+  {
+    path: "/home",
+    component: HomePage
+  },
+  {
+    path: "/create",
+    component: CreateReservation
+  },
+  {
+    path: "/profile",
+    component: ProfilePage
+  },
+  {
+    path: "/create-space",
+    component: CreateSpace
+  },
+  {
+    path: "/my-reservations",
+    component: MyReservations
+  },
+  {
+    path: "/my-spaces",
+    component: MySpaces
   },
   { 
-    path: "/create", 
-    component: CreateReservation 
+    path: "/space/:id", 
+    component: SpaceDetail 
   },
-  { 
-    path: "/profile", 
-    component: ProfilePage 
+  {
+  path: "/space-edit/:id",
+  component: SpaceEdit
+  },
+  {
+  path: "/space-reservations/:id",
+  component: SpaceReservations
+  },
+  {
+  path: "/edit-profile",
+  component: EditProfile
   }
 ];
 
