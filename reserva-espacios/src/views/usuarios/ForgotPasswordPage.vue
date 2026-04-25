@@ -1,43 +1,33 @@
 <template>
   <ion-page>
-  <div class="page-center">
-    <div class="wrapper register" :class="mode">
+    <ion-content>
 
-      <div class="info-text">
-        RECUPERAR
-      </div>
+      <AuthLayout>
 
-      <div class="form-box">
-        <h2 style="color:white;">Recuperar contraseña</h2>
+        <template #left>
+          RECUPERAR
+        </template>
 
-        <div class="input-box">
-          <input v-model="email" placeholder="Correo electrónico" />
-        </div>
+        <h2>Recuperar contraseña</h2>
 
-        <button @click="send">Enviar</button>
+        <AuthForm :fields="[
+          { model: 'email', placeholder: 'Correo electrónico' }
+        ]" buttonText="Enviar" @submit="send" />
 
-        <div class="links">
-          <router-link to="/login">Volver al login</router-link>
-        </div>
-      </div>
+        <router-link to="/login">Volver al login</router-link>
 
-    </div>
-  </div>
+      </AuthLayout>
+    </ion-content>
   </ion-page>
 </template>
 
 <script setup>
-import { IonPage } from '@ionic/vue'
-import { ref } from "vue";
+import AuthLayout from "@/components/users/AuthLayout.vue";
+import AuthForm from "@/components/users/AuthForm.vue";
 import api from "@/services/api";
 
-const email = ref("");
-
-const send = async () => {
-  const res = await api.post("/forgot-password", {
-    email: email.value
-  });
-
+const send = async (form) => {
+  const res = await api.post("/forgot-password", form);
   alert(res.data.message);
 };
 </script>

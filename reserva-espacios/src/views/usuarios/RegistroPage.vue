@@ -1,63 +1,44 @@
 <template>
   <ion-page>
-  <div class="page-center">
-    <div class="wrapper register" :class="mode">
+    <ion-content>
 
-      <div class="info-text">
-        REGÍSTRATE
-      </div>
+      <AuthLayout>
 
-      <div class="form-box">
-        <h2 style="color:white;">Crear Cuenta</h2>
+        <template #left>
+          REGÍSTRATE
+        </template>
 
-        <div class="input-box">
-          <input v-model="nombre" placeholder="Nombre" />
-        </div>
+        <h2>Crear Cuenta</h2>
 
-        <div class="input-box">
-          <input v-model="email" placeholder="Email" />
-        </div>
+        <AuthForm :fields="[
+          { model: 'nombre', placeholder: 'Nombre' },
+          { model: 'email', placeholder: 'Email' },
+          { model: 'password', type: 'password', placeholder: 'Contraseña' }
+        ]" buttonText="Registrarse" @submit="register" />
 
-        <div class="input-box">
-          <input type="password" v-model="password" placeholder="Contraseña" />
-        </div>
+        <router-link to="/login">Ya tengo cuenta</router-link>
 
-        <button @click="register">Registrarse</button>
-
-        <div class="links">
-          <router-link to="/login">Ya tengo cuenta</router-link>
-        </div>
-      </div>
-
-    </div>
-  </div>
+      </AuthLayout>
+    </ion-content>
   </ion-page>
 </template>
 
 <script setup>
-import { IonPage } from '@ionic/vue'
-import { ref } from "vue";
+import AuthLayout from "@/components/users/AuthLayout.vue";
+import AuthForm from "@/components/users/AuthForm.vue";
 import api from "@/services/api";
 import { useRouter } from "vue-router";
 
-const nombre = ref("");
-const email = ref("");
-const password = ref("");
 const router = useRouter();
 
-const register = async () => {
+const register = async (form) => {
   await api.post("/register", {
-    nombre: nombre.value,
+    ...form,
     apellido: "",
-    email: email.value,
-    codigo: email.value,
-    password: password.value
+    codigo: form.email
   });
 
   alert("Usuario creado");
   router.push("/login");
-
-  
-document.activeElement.blur();
 };
 </script>

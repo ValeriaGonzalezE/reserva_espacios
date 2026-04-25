@@ -24,34 +24,43 @@
           <input type="date" v-model="fecha" />
 
           <select v-model="tipo">
-            <option value="">Todos</option>
+            <option value="">Todo tipo de espacio</option>
             <option v-for="t in tipos" :key="t.id" :value="t.nombre">
               {{ t.nombre }}
             </option>
           </select>
 
           <select v-model="pago">
-            <option value="">Todos</option>
-            <option value="si">De pago</option>
-            <option value="no">Gratis</option>
+            <option value="">Todo tipo de pago</option>
+            <option value="si">De pago 💰</option>
+            <option value="no">Gratis 🆓</option>
           </select>
 
           <button @click="filtrar">Filtrar</button>
         </div>
 
+        <div v-if="fecha || tipo || pago" class="filtros-activos">filtrando por:
+          <span v-if="fecha">📅 {{ fecha }}</span>
+          <span v-if="tipo">🏢 {{ tipo }}</span>
+          <span v-if="pago">💰 {{ pago === 'si' ? 'De pago' : 'Gratis' }}</span>
+        </div>
+
+
         <!-- LISTA -->
         <div class="content">
 
-          <div 
-            class="card" 
-            v-for="salon in salones" 
-            :key="salon.id" 
-            @click="verDetalle(salon)"
-          >
+          <div class="card" v-for="salon in salones" :key="salon.id" @click="verDetalle(salon)">
             <h3>{{ salon.nombre }}</h3>
             <p>📍Ubicación: {{ salon.ubicacion }}</p>
             <p>Tipo de lugar: {{ salon.tipo }}</p>
-            <p :class="salon.disponibilidad === 'Disponible' ? 'ok' : 'bad'"> {{ salon.disponibilidad }} </p>
+            <p v-if="salon.horarios_ocupados" class="bad">
+              ⛔ Ocupado en: {{ salon.horarios_ocupados }}
+            </p>
+
+            <p v-else class="ok">
+              Disponible
+            </p>
+
 
           </div>
 
@@ -87,13 +96,25 @@ const salones = ref([]);
 
 // Cargar todos
 const cargarEspacios = async () => {
-  const res = await api.get("/espacios");
+  const res = await api.get("/espacios", {
+    params: {
+      fecha: fecha.value
+    }
+  });
+
   salones.value = res.data;
 };
 
 // Filtrar
 const filtrar = async () => {
-  const res = await api.get(`/espacios?tipo=${tipo.value}&pago=${pago.value}`);
+  const res = await api.get(`/espacios`, {
+    params: {
+      fecha: fecha.value,
+      tipo: tipo.value,
+      pago: pago.value
+    }
+  });
+
   salones.value = res.data;
 };
 
@@ -159,8 +180,8 @@ const logout = () => {
   min-height: 100vh;
 }
 
-.estado{
-  color:rgb(0, 255, 38);
+.estado {
+  color: rgb(0, 255, 38);
 }
 
 .btn-menu {
@@ -190,5 +211,12 @@ const logout = () => {
   padding: 20px;
 }
 
+.filtros-activos {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #ff2e63;
+  margin-top: 5px;
+  padding:  0px 35%;
+}
 </style>
-

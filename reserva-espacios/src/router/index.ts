@@ -13,6 +13,7 @@ import SpaceDetail from "@/views/SpaceDetail.vue";
 import SpaceReservations from "@/views/SpaceReservations.vue";
 import EditProfile from "@/views/EditProfile.vue";
 import SpaceEdit from '@/views/SpaceEdit.vue';
+import ReprogramReservation from "@/views/ReprogramReservation.vue";
 
 // Usuarios
 import LoginPage from '../views/usuarios/LoginPage.vue';
@@ -24,62 +25,76 @@ const routes: Array<RouteRecordRaw> = [
     path: '/',
     redirect: '/login'
   },
-
   {
     path: '/login',
-    name: 'Login',
-    component: LoginPage
+    component: LoginPage,
+    meta: { public: true }
   },
   {
     path: '/register',
-    name: 'Registro',
-    component: RegistroPage
+    component: RegistroPage,
+    meta: { public: true }
   },
   {
     path: '/forgot',
-    name: 'ForgotPassword',
-    component: ForgotPasswordPage
+    component: ForgotPasswordPage,
+    meta: { public: true }
   },
   //vistas menu
   {
     path: "/home",
+    name: "Home",
     component: HomePage
   },
   {
     path: "/create",
+    name: "CreateReservation",
     component: CreateReservation
   },
   {
     path: "/profile",
+    name: "ProfilePage",
     component: ProfilePage
   },
   {
     path: "/create-space",
+    name: "CreateSpace",
     component: CreateSpace
   },
   {
     path: "/my-reservations",
+    name: "MyReservations",
     component: MyReservations
   },
   {
     path: "/my-spaces",
+    name: "MySpaces",
     component: MySpaces
   },
-  { 
-    path: "/space/:id", 
-    component: SpaceDetail 
+  {
+    path: "/space/:id",
+    name: "SpaceDetail",
+    component: SpaceDetail
   },
   {
-  path: "/space-edit/:id",
-  component: SpaceEdit
+    path: "/space-edit/:id",
+    name: "SpaceEdit",
+    component: SpaceEdit
   },
   {
-  path: "/space-reservations/:id",
-  component: SpaceReservations
+    path: "/space-reservations/:id",
+    name: "SpaceReservations",
+    component: SpaceReservations
   },
   {
-  path: "/edit-profile",
-  component: EditProfile
+    path: "/edit-profile",
+    name: "EditProfile",
+    component: EditProfile
+  },
+  {
+    path: "/edit-reservation/:id",
+      name: "ReprogramReservation",
+    component: ReprogramReservation
   }
 ];
 
@@ -89,14 +104,12 @@ const router = createRouter({
 });
 
 
-//  PROTECCIÓN DE RUTAS (por ahora no hay privadas, pero lo dejamos listo)
+//  PROTECCIÓN DE RUTAS 
 router.beforeEach((to, from, next) => {
-  const publicPages = ['/login', '/register', '/forgot'];
-  const authRequired = !publicPages.includes(to.path);
-
+  const isPublic = to.meta.public;
   const token = localStorage.getItem("token");
 
-  if (authRequired && !token) {
+  if (!isPublic && !token) {
     return next('/login');
   }
 
