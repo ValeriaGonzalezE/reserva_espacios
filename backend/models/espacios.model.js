@@ -4,30 +4,38 @@ exports.getEspacios = (filters, callback) => {
   const { fecha, tipo, pago } = filters;
 
   let sql = `
-    SELECT e.*, t.nombre AS tipo,
-    GROUP_CONCAT(CONCAT(r.hora_inicio, ' - ', r.hora_fin) SEPARATOR ', ') AS horarios_ocupados
+    SELECT e.*, t.nombre AS tipo
     FROM espacios e
     JOIN tipos_espacio t ON e.tipo_id = t.id
-    LEFT JOIN reservas r 
-      ON e.id = r.espacio_id
-      AND r.estado = 'activa'
-      ${fecha ? "AND r.fecha = ?" : ""}
     WHERE e.estado = 'activo'
   `;
 
   let params = [];
 
-  if (fecha) params.push(fecha);
+  // FILTRO POR FECHA (CLAVE)
+  if (fecha) {
+    sql += `
+      AND e.id NOT IN (
+        SELECT espacio_id
+        FROM reservas
+        WHERE fecha = ?
+        AND estado = 'activa'
+      )
+    `;
+    params.push(fecha);
+  }
+
+  // FILTRO POR TIPO
   if (tipo) {
     sql += " AND t.nombre = ?";
     params.push(tipo);
   }
+
+  // FILTRO POR PAGO
   if (pago) {
     sql += " AND e.requiere_pago = ?";
     params.push(pago);
   }
-
-  sql += " GROUP BY e.id";
 
   db.query(sql, params, callback);
 };
@@ -92,4 +100,30 @@ exports.updateEspacio = (id, data, callback) => {
 
 exports.deleteEspacio = (id, callback) => {
   db.query("DELETE FROM espacios WHERE id = ?", [id], callback);
+};
+
+exports.getComentarios = (id, callback) => {
+  db.query(
+    `SELECT c.*, u.nombre 
+     FROM comentarios c
+     JOIN usuarios u ON c.usuario_id = u.id
+     WHERE c.espacio_id = ?
+     ORDER BY c.fecha DESC`,
+    [id],
+    callback
+  );
+};
+
+exports.createComentario = (data, callback) => {
+  db.query(
+    `INSERT INTO comentarios (espacio_id, usuario_id, comentario, estrellas)
+     VALUES (?, ?, ?, ?)`,
+    [
+      data.espacio_id,
+      data.usuario_id,
+      data.comentario,
+      data.estrellas
+    ],
+    callback
+  );
 };
