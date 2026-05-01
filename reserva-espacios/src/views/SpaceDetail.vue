@@ -171,7 +171,7 @@ const distribucion = computed(() => {
           <button v-if="espacio.fotos.length > 1" @click="prev">‹</button>
 
           <img :src="espacio.fotos[current]" />
-
+          
           <button v-if="espacio.fotos.length > 1" @click="next">›</button>
 
         </div>
@@ -184,7 +184,7 @@ const distribucion = computed(() => {
         <!-- RATING -->
         <div class="rating">
 
-          <h2 v-if="promedio">⭐ {{ promedio }} / 5</h2>
+          <h2 v-if="promedio">★ {{ promedio }} / 5</h2>
           <h2 v-else class="sin-opiniones">Sin calificaciones</h2>
 
           <p>{{ comentarios.length }} opiniones</p>

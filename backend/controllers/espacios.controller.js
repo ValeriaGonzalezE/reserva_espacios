@@ -74,7 +74,7 @@ exports.createEspacio = (req, res) => {
       let guardadas = 0;
 
       req.files.forEach(file => {
-        const url = `http://localhost:3000/uploads/${file.filename}`;
+        const url = `/uploads/${file.filename}`;
 
         db.query(
           "INSERT INTO espacio_fotos (espacio_id, url) VALUES (?, ?)",
@@ -102,10 +102,6 @@ exports.createEspacio = (req, res) => {
 
 exports.getMisEspacios = (req, res) => {
   model.getMisEspacios(req.params.id, (err, result) => res.json(result));
-};
-
-exports.getEspacio = (req, res) => {
-  model.getEspacio(req.params.id, (err, result) => res.json(result[0]));
 };
 
 exports.updateEspacio = (req, res) => {

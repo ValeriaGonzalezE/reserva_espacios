@@ -206,8 +206,15 @@ const logout = () => {
 
 /* MENU */
 .menu {
+  position: absolute;
+  top: 60px; /* debajo del header */
+  left: 10px;
+  width: 220px;
   background: #1e1e1e;
   padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  z-index: 9999; /*lo pone por encima de todo */
 }
 
 .menu p {
