@@ -25,13 +25,14 @@ const emit = defineEmits(["guardar"]);
     <input type="number" v-model="espacio.capacidad" />
 
     <label>Ubicación</label>
-    <input v-model="espacio.ubicacion" />
+    <input v-model="espacio.ubicacion" placeholder="Ej: Calle 1 #1A-1, barrio" />
 
     <label>Descripción</label>
     <textarea v-model="espacio.descripcion"></textarea>
 
     <label>¿Pago?</label>
     <select v-model="espacio.requiere_pago">
+      <option disabled value="">Selecciona</option>
       <option value="no">Gratis</option>
       <option value="si">De pago</option>
     </select>
@@ -41,7 +42,9 @@ const emit = defineEmits(["guardar"]);
       <input type="number" v-model="espacio.precio" />
     </div>
 
-    <button @click="emit('guardar')">Guardar</button>
+    <button type="button" @click="() => { console.log('CLICK HIJO'); emit('guardar') }">
+      Guardar
+    </button>
 
   </div>
 </template>
@@ -53,7 +56,9 @@ const emit = defineEmits(["guardar"]);
   gap: 12px;
 }
 
-input, textarea, select {
+input,
+textarea,
+select {
   padding: 10px;
   border-radius: 8px;
   border: none;
