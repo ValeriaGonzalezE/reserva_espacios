@@ -29,13 +29,8 @@ onMounted(async () => {
         <BackButton />
         <h2>Mis Espacios</h2>
 
-        <SpaceCard
-          v-for="e in espacios"
-          :key="e.id"
-          :espacio="e"
-          @verReservas="id => router.push(`/space-reservations/${id}`)"
-          @editar="id => router.push(`/space-edit/${id}`)"
-        />
+        <SpaceCard v-for="espacio in espacios" :key="espacio.id" :espacio="espacio" :mostrarEditar="true"
+          @editar="editarEspacio" />
 
       </div>
 

@@ -1,19 +1,22 @@
 <script setup>
 const props = defineProps({
-  espacio: Object
+  espacio: Object,
+  mostrarEditar: {
+    type: Boolean,
+    default: false
+  }
 });
 
 const emit = defineEmits(["verReservas", "editar"]);
+
+
 </script>
 
 <template>
   <div class="card">
 
-    <img 
-      src="https://cdn-icons-png.flaticon.com/128/1159/1159633.png"
-      class="edit-btn"
-      @click.stop="emit('editar', espacio.id)"
-    />
+    <img v-if="mostrarEditar" src="https://cdn-icons-png.flaticon.com/128/1159/1159633.png" class="edit-btn"
+      @click.stop="emit('editar', espacio.id)" />
 
     <div @click="emit('verReservas', espacio.id)">
       <img v-if="espacio.imagen" :src="espacio.imagen" class="img" />
@@ -61,6 +64,11 @@ const emit = defineEmits(["verReservas", "editar"]);
   border-radius: 10px;
 }
 
-.ok { color: #00ff9d; }
-.bad { color: #ff4d4d; }
+.ok {
+  color: #00ff9d;
+}
+
+.bad {
+  color: #ff4d4d;
+}
 </style>

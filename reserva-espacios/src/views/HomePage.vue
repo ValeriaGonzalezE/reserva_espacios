@@ -21,6 +21,7 @@
 
         <!-- FILTROS -->
         <div class="filters">
+
           <input type="date" v-model="fecha" />
 
           <select v-model="tipo">
@@ -36,37 +37,30 @@
             <option value="no">Gratis 🆓</option>
           </select>
 
-          <button @click="filtrar">Filtrar</button>
+          <div class="actions">
+            <button @click="obtenerEspacios">Filtrar</button>
+            <button class="clear" @click="limpiarFiltros">Limpiar</button>
+          </div>
+
         </div>
 
-        <div v-if="fecha || tipo || pago" class="filtros-activos">filtrando por:
+        <!-- FILTROS ACTIVOS -->
+        <div v-if="fecha || tipo || pago" class="filtros-activos">
           <span v-if="fecha">📅 {{ fecha }}</span>
           <span v-if="tipo">🏢 {{ tipo }}</span>
-          <span v-if="pago">💰 {{ pago === 'si' ? 'De pago' : 'Gratis' }}</span>
+          <span v-if="pago">
+            {{ pago === 'si' ? '💰 De pago' : '🆓 Gratis' }}
+          </span>
         </div>
-
 
         <!-- LISTA -->
         <div class="content">
 
-          <div class="card" v-for="salon in salones" :key="salon.id" @click="verDetalle(salon)">
-            <h3>{{ salon.nombre }}</h3>
-            <p>📍Ubicación: {{ salon.ubicacion }}</p>
-            <p>Tipo de lugar: {{ salon.tipo }}</p>
-            <p v-if="salon.horarios_ocupados" class="bad">
-              ⛔ Ocupado en: {{ salon.horarios_ocupados }}
-            </p>
-
-            <p v-else class="ok">
-              Disponible
-            </p>
-
-
-          </div>
+          <SpaceCard v-for="salon in salones" :key="salon.id" :espacio="salon" @verReservas="verDetalle" />
 
           <!-- SIN RESULTADOS -->
           <div v-if="salones.length === 0" class="no-results">
-            Sin resultados
+            No hay espacios disponibles con esos filtros
           </div>
 
         </div>
@@ -82,6 +76,9 @@ import { ref, onMounted, onActivated } from "vue";
 import { useUserStore } from "@/stores/UserStore";
 import api from "@/services/api";
 
+import SpaceCard from "@/components/espacios/SpaceCard.vue";
+
+// ===== ROUTER =====
 const ionRouter = useIonRouter();
 const userStore = useUserStore();
 
@@ -94,40 +91,58 @@ const fecha = ref(new Date().toISOString().split("T")[0]);
 // ===== LISTA =====
 const salones = ref([]);
 
-// Cargar todos
-const cargarEspacios = async () => {
-  const res = await api.get("/espacios", {
-    params: {
-      fecha: fecha.value
-    }
-  });
+// ===== OBTENER ESPACIOS (FILTRO + GENERAL) =====
+const obtenerEspacios = async () => {
+  try {
 
-  salones.value = res.data;
+    console.log("TIPO ENVIADO:", tipo.value);
+
+    const res = await api.get("/espacios", {
+      params: {
+        fecha: fecha.value || undefined,
+        tipo: tipo.value || null,
+        pago: pago.value || null
+      }
+    });
+
+    salones.value = res.data;
+
+  } catch (err) {
+    console.error("Error cargando espacios", err);
+  }
 };
 
-// Filtrar
-const filtrar = async () => {
-  const res = await api.get(`/espacios`, {
-    params: {
-      fecha: fecha.value,
-      tipo: tipo.value,
-      pago: pago.value
-    }
-  });
+// ===== CARGAR TIPOS =====
+const cargarTipos = async () => {
+  try {
+    const res = await api.get("/espacios/tipos");
 
-  salones.value = res.data;
+    console.log("TIPOS DESDE BACK:", res.data);
+
+    tipos.value = res.data;
+
+  } catch (err) {
+    console.error("Error cargando tipos", err);
+  }
 };
 
-// Cargar al entrar
+// ===== LIMPIAR FILTROS =====
+const limpiarFiltros = () => {
+  fecha.value = null;
+  tipo.value = "";
+  pago.value = "";
+
+  obtenerEspacios();
+};
+
+// ===== CICLO DE VIDA =====
 onMounted(async () => {
-  await cargarEspacios();
-
-  const res = await api.get("/tipos");
-  tipos.value = res.data;
+  await cargarTipos();
+  await obtenerEspacios();
 });
 
 onActivated(() => {
-  cargarEspacios();
+  obtenerEspacios();
 });
 
 // ===== MENU =====
@@ -137,7 +152,7 @@ const toggleMenu = () => showMenu.value = !showMenu.value;
 
 const cerrarMenu = () => showMenu.value = false;
 
-// ===== NAVEGACIÓN (AQUÍ ESTÁ LA CLAVE) =====
+// ===== NAVEGACIÓN =====
 const goHome = () => {
   cerrarMenu();
   ionRouter.push("/home");
@@ -163,8 +178,8 @@ const goProfile = () => {
   ionRouter.push("/profile");
 };
 
-const verDetalle = (salon) => {
-  ionRouter.push(`/space/${salon.id}`);
+const verDetalle = (id) => {
+  ionRouter.push(`/space/${id}`);
 };
 
 const logout = () => {
@@ -173,20 +188,11 @@ const logout = () => {
 };
 </script>
 
-<style>
+<style scoped>
 .layout {
   background: #0f0f0f;
   color: white;
   min-height: 100vh;
-}
-
-.estado {
-  color: rgb(0, 255, 38);
-}
-
-.btn-menu {
-  border-radius: 50%;
-  width: 35px;
 }
 
 /* HEADER */
@@ -198,6 +204,18 @@ const logout = () => {
   padding: 15px;
 }
 
+/* MENU */
+.menu {
+  background: #1e1e1e;
+  padding: 10px;
+}
+
+.menu p {
+  padding: 10px;
+  border-bottom: 1px solid #333;
+  cursor: pointer;
+}
+
 /* FILTROS */
 .filters {
   padding: 15px;
@@ -206,17 +224,57 @@ const logout = () => {
   gap: 10px;
 }
 
+.filters input,
+.filters select {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  background: #1e1e1e;
+  color: white;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+button {
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: #ff2e63;
+  color: white;
+  cursor: pointer;
+}
+
+button.clear {
+  background: #444;
+}
+
+/* FILTROS ACTIVOS */
+.filtros-activos {
+  display: flex;
+  gap: 10px;
+  padding: 0 15px;
+  font-size: 12px;
+  color: #ff2e63;
+}
+
 /* CONTENT */
 .content {
   padding: 20px;
 }
 
-.filtros-activos {
-  display: flex;
-  justify-content: space-between;
-  font-size: 12px;
-  color: #ff2e63;
-  margin-top: 5px;
-  padding:  0px 35%;
+/* NO RESULTS */
+.no-results {
+  text-align: center;
+  margin-top: 20px;
+  color: #888;
+}
+
+/* MENU BTN */
+.btn-menu {
+  border-radius: 50%;
+  width: 35px;
 }
 </style>
