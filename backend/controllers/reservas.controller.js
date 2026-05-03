@@ -29,8 +29,6 @@ exports.getMisReservas = (req, res) => {
       return res.status(500).json(err);
     }
 
-    console.log("RESULTADO SQL:", result);
-
     res.json(result);
   });
 };

@@ -85,7 +85,6 @@ exports.getMisReservas = (id, callback) => {
             pendientes--;
 
             if (pendientes === 0) {
-              console.log("RESERVAS COMPLETAS:", reservas);
               callback(null, reservas);
             }
           }

@@ -51,8 +51,8 @@ onUnmounted(() => {
       <p v-else>🆓 Gratis</p>
 
       <div class="acciones">
-        <button @click="$emit('editar', reserva)">✏️</button>
-        <button @click="$emit('cancelar', reserva.id)">❌</button>
+        <button @click="$emit('editar', reserva)">Editar ✏️</button>
+        <button @click="$emit('cancelar', reserva.id)">Cancelar ❌</button>
       </div>
 
     </div>
@@ -177,9 +177,40 @@ onUnmounted(() => {
 .acciones button {
   background: #ff2e63;
   border: none;
-  padding: 8px;
-  border-radius: 8px;
+  padding: 10px 50px 10px;
+  border-radius: 7px;
   color: white;
   cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
 }
+
+/* tablet */
+@media (min-width: 768px) and (max-width: 1081px) {
+
+  .acciones button {
+    padding: 10px 50px 10px;
+  }
+
+}
+
+/* tablet */
+@media (min-width: 551px) and (max-width: 768px) {
+
+  .acciones button {
+    padding: 10px 30px 10px;
+  }
+
+}
+
+/* celular */
+@media (max-width: 551px) {
+
+  .acciones button {
+    padding: 10px 10px 10px;
+  }
+
+}
+
 </style>
