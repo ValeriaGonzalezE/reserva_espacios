@@ -1,24 +1,40 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
 import api from "@/services/api";
 import { useUserStore } from "@/stores/UserStore";
 
 import BackButton from "@/components/ui/BackButton.vue";
+import PageHeader from "@/components/ui/PageHeader.vue";
 import ReservationCard from "@/components/reservations/ReservationCard.vue";
+import CalendarStrip from "@/components/reservations/CalendarStrip.vue";
 
 const router = useRouter();
 const userStore = useUserStore();
 
 const reservas = ref([]);
+const fechaSeleccionada = ref(new Date().toISOString().split("T")[0]);
 
 // cargar reservas
 const cargar = async () => {
-  const res = await api.get(`/mis-reservas/${userStore.user.id}`);
-  console.log("RESERVAS:", res.data);
-  reservas.value = res.data;
+  try {
+    const res = await api.get(`/reservas/mis-reservas/${userStore.user.id}`);
+
+    console.log("RESERVAS BACK:", res.data);
+
+    reservas.value = res.data;
+  } catch (err) {
+    console.error("ERROR:", err);
+  }
 };
 
+// filtrar por fecha
+const reservasFiltradas = computed(() => {
+  return reservas.value.filter(r => {
+    if (!r.fecha) return false;
+    return r.fecha.split("T")[0] === fechaSeleccionada.value;
+  });
+});
 
 // cancelar
 const cancelar = async (id) => {
@@ -40,37 +56,66 @@ onMounted(cargar);
 <template>
   <ion-page>
     <ion-content>
-      <div class="container">
 
-        <BackButton />
+      <div class="page">
 
-        <h2>Mis Reservas</h2>
+        <BackButton class="back-floating" />
+        <PageHeader titulo="MIS RESERVAS" />
 
-        <div v-if="reservas.length">
+        <div class="container">
 
-          <ReservationCard v-for="r in reservas" :key="r.id" :reserva="r" @editar="editar" @cancelar="cancelar" />
+          <!-- CALENDARIO -->
+          <CalendarStrip :eventos="reservas" v-model="fechaSeleccionada" />
+          <br><br>
+          <!-- LISTA -->
+          <div v-if="reservasFiltradas.length">
 
-        </div>
+            <ReservationCard v-for="r in reservasFiltradas" :key="r.id" :reserva="r" @editar="editar"
+              @cancelar="cancelar" />
 
-        <div v-else class="no-results">
-          No tienes reservas
+          </div>
+
+          <div v-else class="no-results">
+            No tienes reservas para este día
+          </div>
+
         </div>
 
       </div>
+
     </ion-content>
   </ion-page>
 </template>
 
-<style>
-.container {
-  padding: 20px;
-  background: #0f0f0f;
-  color: white;
+<style scoped>
+.page {
   min-height: 100vh;
+  padding: 20px;
+  background: radial-gradient(circle at top, #1a0005, #0f0f0f);
+  color: white;
 }
 
+/* BOTÓN FLOTANTE */
+.back-floating {
+  position: absolute;
+  top: 32px;
+  left: 35px;
+  z-index: 10;
+}
+
+/* CONTENEDOR */
+.container {
+  margin-top: 30px;
+  background: #1e1e1e;
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 0 25px rgba(255, 46, 99, 0.3);
+}
+
+/* NO RESULTADOS */
 .no-results {
   text-align: center;
-  color: #aaa;
+  color: #888;
+  margin-top: 20px;
 }
 </style>

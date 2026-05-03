@@ -48,17 +48,63 @@ exports.createReserva = (data, callback) => {
 
 exports.getMisReservas = (id, callback) => {
   db.query(
-    `SELECT r.id, r.fecha, r.hora_inicio, r.hora_fin,
-      e.nombre, e.capacidad, e.precio, e.requiere_pago, e.imagen, e.ubicacion, e.descripcion
+    `SELECT 
+      r.id, r.fecha, r.hora_inicio, r.hora_fin,
+      e.id AS espacio_id,
+      e.nombre, e.capacidad, e.precio, e.requiere_pago, e.ubicacion, e.descripcion
      FROM reservas r
      JOIN espacios e ON r.espacio_id = e.id
      WHERE r.usuario_id = ?
      AND r.estado = 'activa'`,
     [id],
-    callback
+    (err, reservas) => {
+      if (err) {
+        console.error("ERROR BASE:", err);
+        return callback(err);
+      }
+
+      if (reservas.length === 0) {
+        return callback(null, []);
+      }
+
+      let pendientes = reservas.length;
+
+      reservas.forEach(r => {
+        db.query(
+          "SELECT url FROM espacio_fotos WHERE espacio_id = ?",
+          [r.espacio_id],
+          (err2, fotos) => {
+
+            if (err2) {
+              console.error("ERROR FOTOS:", err2);
+              r.fotos = [];
+            } else {
+              r.fotos = fotos.map(f => f.url);
+            }
+
+            pendientes--;
+
+            if (pendientes === 0) {
+              console.log("RESERVAS COMPLETAS:", reservas);
+              callback(null, reservas);
+            }
+          }
+        );
+      });
+    }
   );
 };
 
 exports.cancelarReserva = (id, callback) => {
   db.query("UPDATE reservas SET estado='cancelada' WHERE id=?", [id], callback);
+};
+
+exports.updateReserva = (id, data, callback) => {
+  db.query(
+    `UPDATE reservas 
+     SET fecha=?, hora_inicio=?, hora_fin=? 
+     WHERE id=?`,
+    [data.fecha, data.hora_inicio, data.hora_fin, id],
+    callback
+  );
 };

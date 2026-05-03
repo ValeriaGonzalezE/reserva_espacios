@@ -7,5 +7,6 @@ router.get("/espacio/:id", controller.getReservasEspacio);
 router.post("/", controller.createReserva);
 router.get("/mis-reservas/:id", controller.getMisReservas);
 router.put("/cancelar/:id", controller.cancelarReserva);
+router.put("/:id", controller.updateReserva);
 
 module.exports = router;

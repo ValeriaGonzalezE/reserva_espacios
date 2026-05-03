@@ -22,11 +22,28 @@ exports.createReserva = (req, res) => {
 };
 
 exports.getMisReservas = (req, res) => {
-  model.getMisReservas(req.params.id, (err, result) => res.json(result));
+  model.getMisReservas(req.params.id, (err, result) => {
+
+    if (err) {
+      console.error("ERROR RESERVAS:", err);
+      return res.status(500).json(err);
+    }
+
+    console.log("RESULTADO SQL:", result);
+
+    res.json(result);
+  });
 };
 
 exports.cancelarReserva = (req, res) => {
   model.cancelarReserva(req.params.id, () =>
     res.json({ success: true })
   );
+};
+
+exports.updateReserva = (req, res) => {
+  model.updateReserva(req.params.id, req.body, (err) => {
+    if (err) return res.status(500).json(err);
+    res.json({ success: true });
+  });
 };

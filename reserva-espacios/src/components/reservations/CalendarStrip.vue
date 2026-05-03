@@ -55,9 +55,11 @@ let baseDate = new Date();
 // RESPONSIVE
 const calcularDiasVisibles = () => {
   const width = window.innerWidth;
-  if (width < 500) cantidadDias.value = 5;
-  else if (width < 900) cantidadDias.value = 7;
-  else cantidadDias.value = 11;
+
+  if (width < 480) cantidadDias.value = 3;     // 📱 móvil
+  else if (width < 768) cantidadDias.value = 6; // 📲 tablet pequeña
+  else if (width < 1200) cantidadDias.value = 8; // tablet grande
+  else cantidadDias.value = 11; // 💻 desktop
 };
 
 // MES
@@ -135,46 +137,74 @@ onMounted(() => {
 .calendar-wrapper {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  position: relative;
 }
 
 .dias {
   display: flex;
   gap: 10px;
+  flex: 1; /*ocupa el espacio central */
+  justify-content: center;
+  overflow: hidden;
 }
 
 .dia {
-  width: 65px;
-  padding: 10px;
+  width: 70px;
+  height: 85px;
+  padding: 8px;
   border-radius: 15px;
   text-align: center;
   cursor: pointer;
-  background: #1e1e1e;
+  background: #111111;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: 0.2s;
+  border: 1px solid #444;
 }
 
+.dia:hover {
+  transform: scale(1.05);
+}
+
+/* ACTIVO */
 .dia.activo {
   background: #ff2e63;
+  border: 1px solid #ff547e;
+  color: white;
+  font-weight: bold;
+  box-shadow: 0 0 10px rgba(255, 46, 99, 0.7);
 }
 
+/* HOY */
 .dia.hoy {
-  border: 2px solid #ff2e63;
+  border: 1px solid #ff2e63;
 }
 
+/* TEXTO */
 .nombre {
-  font-size: 11px;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: #aaa;
 }
 
 .numero {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: bold;
+  margin-top: 5px;
 }
 
+/* PUNTITO */
 .dot {
   width: 6px;
   height: 6px;
   background: #00ff9d;
   border-radius: 50%;
-  margin: 4px auto 0;
+  margin-top: 6px;
 }
 
 .nav-btn {
@@ -185,5 +215,44 @@ onMounted(() => {
   padding: 6px 10px;
   border-radius: 10px;
   cursor: pointer;
+}
+
+/* celular */
+@media (max-width: 480px) {
+
+  .dia {
+    min-width: 55px;
+    padding: 10px 6px;
+  }
+
+  .nombre {
+    font-size: 10px;
+  }
+
+  .numero {
+    font-size: 16px;
+  }
+
+  .nav-btn {
+    font-size: 16px;
+    padding: 5px 8px;
+  }
+}
+/* tablet */ 
+@media (min-width: 481px) and (max-width: 768px) {
+
+  .dia {
+    min-width: 60px;
+  }
+
+}
+
+/* desktop */
+@media (min-width: 1200px) {
+
+  .dia {
+    min-width: 70px;
+  }
+
 }
 </style>
