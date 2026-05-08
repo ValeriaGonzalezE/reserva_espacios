@@ -9,7 +9,6 @@ const props = defineProps({
 
 const emit = defineEmits(["verReservas", "editar"]);
 
-
 </script>
 
 <template>
@@ -49,6 +48,7 @@ const emit = defineEmits(["verReservas", "editar"]);
   margin-bottom: 10px;
   border-left: 5px solid #ff2e63;
   border-radius: 8px;
+  cursor: pointer;
 }
 
 .edit-btn {
@@ -57,6 +57,7 @@ const emit = defineEmits(["verReservas", "editar"]);
   right: 20px;
   width: 25px;
   cursor: pointer;
+  filter: invert(100%);
 }
 
 .img {

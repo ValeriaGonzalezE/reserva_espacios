@@ -14,10 +14,12 @@ exports.getReservasEspacio = (id, callback) => {
   db.query(
     `SELECT 
       r.id, r.fecha, r.hora_inicio, r.hora_fin,
-      u.nombre AS usuario_nombre, u.telefono
+      u.nombre AS usuario_nombre, u.apellido, u.telefono, u.email
      FROM reservas r
      JOIN usuarios u ON r.usuario_id = u.id
-     WHERE r.espacio_id = ?`,
+     WHERE r.espacio_id = ?
+     AND r.estado = 'activa'
+     ORDER BY r.fecha ASC`,
     [id],
     callback
   );
