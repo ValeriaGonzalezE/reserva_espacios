@@ -11,9 +11,9 @@
         <h2>Recuperar contraseña</h2>
 
         <AuthForm :fields="[
-          { model: 'email', placeholder: 'Correo electrónico' }
+          { model: 'email', label: 'escribe tu correo', placeholder: 'Correo electrónico' }
         ]" buttonText="Enviar" @submit="send" />
-
+        <br>
         <router-link to="/login">Volver al login</router-link>
 
       </AuthLayout>

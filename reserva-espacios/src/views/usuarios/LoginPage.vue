@@ -9,15 +9,26 @@
         </template>
 
         <h2>Iniciar Sesión</h2>
+        <br>
 
         <AuthForm :fields="[
-          { model: 'codigo', placeholder: 'Usuario o Email' },
-          { model: 'password', type: 'password', placeholder: 'Contraseña' }
+          {
+            model: 'codigo',
+            label: 'Usuario (Correo)',
+            placeholder: 'ejemplo@gmail.com'
+          },
+          {
+            model: 'password',
+            label: 'Contraseña',
+            type: 'password',
+            placeholder: 'Ingresa tu contraseña'
+          }
         ]" buttonText="Iniciar Sesión" @submit="login" />
-
+        <br>
         <div class="links">
           <router-link to="/forgot">¿Olvidaste tu contraseña?</router-link>
-          <router-link to="/register">Crear cuenta</router-link>
+          <br>
+          <router-link to="/register"> Crear cuenta</router-link>
         </div>
 
       </AuthLayout>

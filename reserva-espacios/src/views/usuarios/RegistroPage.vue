@@ -10,15 +10,54 @@
 
         <h2>Crear Cuenta</h2>
 
-        <AuthForm :fields="[
-          { model: 'nombre', placeholder: 'Nombre' },
-          { model: 'email', placeholder: 'Email' },
-          { model: 'password', type: 'password', placeholder: 'Contraseña' }
-        ]" buttonText="Registrarse" @submit="register" />
+        <p class="subtitle">
+          Completa la información para crear tu cuenta
+        </p>
 
-        <router-link to="/login">Ya tengo cuenta</router-link>
+        <AuthForm :fields="[
+          {
+            model: 'nombre',
+            label: 'Nombre',
+            placeholder: 'Ej: Valeria'
+          },
+          {
+            model: 'apellido',
+            label: 'Apellido',
+            placeholder: 'Ej: González'
+          },
+          {
+            model: 'email',
+            label: 'Correo electrónico',
+            placeholder: 'ejemplo@gmail.com'
+          },
+          {
+            model: 'telefono',
+            label: 'Número de celular',
+            type: 'tel',
+            placeholder: '3001234567'
+          },
+          {
+            model: 'password',
+            label: 'Contraseña',
+            type: 'password',
+            placeholder: 'Mínimo 8 caracteres'
+          },
+          {
+            model: 'confirmPassword',
+            label: 'Confirmar contraseña',
+            type: 'password',
+            placeholder: 'Repite tu contraseña'
+          }
+        ]" buttonText="Crear Cuenta" @submit="register" />
+
+        <div class="links">
+          <router-link to="/">
+            ¿Ya tienes cuenta? Inicia sesión
+          </router-link>
+        </div>
 
       </AuthLayout>
+
     </ion-content>
   </ion-page>
 </template>
@@ -32,13 +71,52 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 
 const register = async (form) => {
-  await api.post("/register", {
-    ...form,
-    apellido: "",
-    codigo: form.email
-  });
 
-  alert("Usuario creado");
-  router.push("/login");
+  // VALIDAR CONTRASEÑAS
+  if (form.password !== form.confirmPassword) {
+    return alert("Las contraseñas no coinciden");
+  }
+
+  // AUTOCOMPLETAR GMAIL
+  if (
+    form.email &&
+    !form.email.includes("@")
+  ) {
+    form.email += "@gmail.com";
+  }
+
+  try {
+
+    const res = await api.post("/register", form);
+
+    if (res.data.success) {
+      alert("Cuenta creada correctamente");
+      router.push("/");
+    } else {
+      alert(res.data.message || "No se pudo crear la cuenta");
+    }
+
+  } catch (error) {
+    alert("Ocurrió un error");
+  }
 };
 </script>
+
+<style scoped>
+.subtitle {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.links {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.links a {
+  color: var(--ion-color-primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+</style>

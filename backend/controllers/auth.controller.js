@@ -5,14 +5,22 @@ const authModel = require("../models/auth.model");
 const SECRET_KEY = "clave_secreta";
 
 exports.register = async (req, res) => {
-  const { nombre, apellido, email, codigo, password } = req.body;
+
+  const { nombre, apellido, email, telefono, password } = req.body;
+
+  const codigo = email;
+
   const hashed = await bcrypt.hash(password, 10);
 
   authModel.createUser(
-    { nombre, apellido, email, codigo, password: hashed },
-    (err) => {
-      if (err) return res.status(500).json(err);
+    { nombre, apellido, email, telefono, codigo, password: hashed }, (err) => {
+
+      if (err) {
+        return res.status(500).json(err);
+      }
+
       res.json({ success: true });
+
     }
   );
 };
