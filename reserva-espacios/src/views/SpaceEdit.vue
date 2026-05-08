@@ -166,8 +166,8 @@ const toggleEstado = async () => {
 }
 
 .container {
-  padding: 10px;
-  margin-top: 80px;
+  padding: 20px;
+  padding-top: 20px;
 }
 
 .form-box {

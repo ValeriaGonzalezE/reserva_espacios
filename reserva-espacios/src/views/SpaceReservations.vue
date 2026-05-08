@@ -163,7 +163,7 @@ const estrellas = (n) => {
 
 .space-info {
   margin: 20px;
-  margin-top: 80px;
+  margin-top: 30px;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.08);
   padding: 20px;

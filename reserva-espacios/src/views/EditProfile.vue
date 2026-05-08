@@ -2,11 +2,19 @@
   <ion-page>
     <ion-content>
 
-      <BackButton />
+      <div class="page">
 
-      <h2>Editar Perfil</h2>
+        <BackButton class="back-floating" />
 
-      <ProfileForm :user="user" @submit="guardar" />
+        <PageHeader titulo="EDITAR PERFIL" />
+
+        <div class="container">
+
+          <ProfileForm :user="user" @submit="guardar" />
+
+        </div>
+
+      </div>
 
     </ion-content>
   </ion-page>
@@ -14,19 +22,99 @@
 
 <script setup>
 import ProfileForm from "@/components/users/ProfileForm.vue";
+
 import BackButton from "@/components/ui/BackButton.vue";
+import PageHeader from "@/components/ui/PageHeader.vue";
+
 import api from "@/services/api";
+
 import { useUserStore } from "@/stores/UserStore";
 
 const userStore = useUserStore();
+
 const user = userStore.user;
 
-const guardar = async (form) => {
-  const res = await api.put(`/usuario/${user.id}`, form);
+// guardar
+const guardar = async (formData) => {
 
-  if (res.data.success) {
-    alert("Actualizado");
-    userStore.user = { ...userStore.user, ...form };
+  try {
+
+    const res = await api.put(
+
+      `/usuarios/${user.id}`,
+
+      formData,
+
+      {
+        headers: {
+          "Content-Type":
+            "multipart/form-data"
+        }
+      }
+
+    );
+
+    if (res.data.success) {
+
+      // actualizar foto
+      if (res.data.foto) {
+
+        userStore.user.foto =
+          res.data.foto;
+
+      }
+
+      // actualizar demás datos
+      userStore.user.nombre =
+        formData.get("nombre");
+
+      userStore.user.apellido =
+        formData.get("apellido");
+
+      userStore.user.email =
+        formData.get("email");
+
+      userStore.user.telefono =
+        formData.get("telefono");
+
+      // guardar localStorage
+      localStorage.setItem(
+        "user",
+        JSON.stringify(userStore.user)
+      );
+
+      alert("Perfil actualizado");
+
+    }
+
+  } catch (err) {
+
+    console.error(err);
+
+    alert("Error al actualizar");
+
   }
+
 };
 </script>
+
+<style scoped>
+.page {
+  min-height: 100vh;
+  background:
+    linear-gradient(135deg, #0f0f0f, #1a0005);
+  color: white;
+}
+
+.back-floating {
+  position: absolute;
+  top: 32px;
+  left: 35px;
+  z-index: 10;
+}
+
+.container {
+  padding: 20px;
+  padding-top: 20px;
+}
+</style>

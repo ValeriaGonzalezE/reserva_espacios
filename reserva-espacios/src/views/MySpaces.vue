@@ -89,7 +89,8 @@ onMounted(async () => {
 }
 
 .container {
-  margin-top: 80px;
+  padding: 20px;
+  padding-top: 20px;
 }
 
 .back-floating {
