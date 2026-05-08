@@ -31,9 +31,9 @@ onMounted(async () => {
   nombreEspacio.value = e?.nombre;
 
   usuario.value = {
-    nombre: userStore.user.nombre,
+    nombre: userStore.user.nombre + " " + userStore.user.apellido,
     telefono: userStore.user.telefono,
-    correo: userStore.user.correo
+    correo: userStore.user.email
   };
 });
 

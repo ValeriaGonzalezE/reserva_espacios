@@ -120,7 +120,6 @@ const eliminarFoto = (index) => {
 .page {
   min-height: 100vh;
   padding: 20px;
-
   background: radial-gradient(circle at top, #1a0005, #0f0f0f);
   color: white;
 }

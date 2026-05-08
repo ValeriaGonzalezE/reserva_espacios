@@ -48,7 +48,7 @@ const dias = ref([]);
 const cantidadDias = ref(7);
 
 const hoy = new Date();
-const hoyISO = hoy.toISOString().split("T")[0];
+const hoyISO = `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, "0")}-${String(hoy.getDate()).padStart(2, "0")}`;
 
 let baseDate = new Date();
 
@@ -84,7 +84,7 @@ const generarDias = () => {
     const fecha = new Date(baseDate);
     fecha.setDate(baseDate.getDate() + i);
 
-    const fechaISO = fecha.toISOString().split("T")[0];
+    const fechaISO = `${fecha.getFullYear()}-${String(fecha.getMonth() + 1).padStart(2, "0")}-${String(fecha.getDate()).padStart(2, "0")}`;
 
     lista.push({
       fecha: fechaISO,

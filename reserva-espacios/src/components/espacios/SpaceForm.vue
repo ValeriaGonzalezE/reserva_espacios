@@ -62,7 +62,7 @@ select {
   padding: 10px;
   border-radius: 8px;
   border: none;
-  background: #1e1e1e;
+  background: #0f0f0f;
   color: white;
 }
 
