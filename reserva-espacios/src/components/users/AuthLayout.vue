@@ -22,13 +22,13 @@
   align-items: center;
   background: #0f0f0f;
   overflow: hidden;
-  padding: 20px;
+  padding: 10px;
 }
 
 .wrapper {
   display: flex;
-  width: 800px;
-  max-height: 90vh;
+  width: 900px;
+  max-height: 80vh;
   background: #1e1e1e;
   border-radius: 10px;
   overflow: hidden;
@@ -49,7 +49,7 @@
 
 .form-box {
   flex: 1;
-  padding: 300px 30px 50px 30px;
+  padding: 50px 30px 50px 30px;
   overflow-y: auto;
   max-height: 90vh;
   scrollbar-width: thin;

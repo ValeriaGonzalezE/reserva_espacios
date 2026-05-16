@@ -4,7 +4,6 @@ import { useRoute } from "vue-router";
 import api from "@/services/api";
 
 import BackButton from "@/components/ui/BackButton.vue";
-import PageHeader from "@/components/ui/PageHeader.vue";
 import CalendarStrip from "@/components/reservations/CalendarStrip.vue";
 
 const route = useRoute();
@@ -71,8 +70,6 @@ const estrellas = (n) => {
       <div class="page">
 
         <BackButton class="back-floating" />
-
-        <PageHeader :titulo="espacio.nombre || 'RESERVAS DEL ESPACIO'" />
 
         <!-- INFO ESPACIO -->
         <div class="space-info">
@@ -157,8 +154,8 @@ const estrellas = (n) => {
 
 .back-floating {
   position: absolute;
-  top: 32px;
-  left: 35px;
+  top: 15px;
+  left: 20px;
 }
 
 .space-info {

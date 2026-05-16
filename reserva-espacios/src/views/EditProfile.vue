@@ -6,8 +6,6 @@
 
         <BackButton class="back-floating" />
 
-        <PageHeader titulo="EDITAR PERFIL" />
-
         <div class="container">
 
           <ProfileForm :user="user" @submit="guardar" />
@@ -24,7 +22,6 @@
 import ProfileForm from "@/components/users/ProfileForm.vue";
 
 import BackButton from "@/components/ui/BackButton.vue";
-import PageHeader from "@/components/ui/PageHeader.vue";
 
 import api from "@/services/api";
 
@@ -108,8 +105,8 @@ const guardar = async (formData) => {
 
 .back-floating {
   position: absolute;
-  top: 32px;
-  left: 35px;
+  top: 15px;
+  left: 20px;
   z-index: 10;
 }
 

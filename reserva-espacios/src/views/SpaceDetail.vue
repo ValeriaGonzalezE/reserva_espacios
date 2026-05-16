@@ -4,7 +4,6 @@ import { useRoute, useRouter } from "vue-router";
 import api from "@/services/api";
 
 import BackButton from "@/components/ui/BackButton.vue";
-import PageHeader from "@/components/ui/PageHeader.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -132,7 +131,6 @@ const distribucion = computed(() => {
       <div class="page">
 
         <BackButton class="back-floating" />
-        <PageHeader titulo="DETALLES DEL ESPACIO" />
 
         <!-- TOP -->
         <div class="layout">
@@ -351,7 +349,7 @@ const distribucion = computed(() => {
 
 .back-floating {
   position: absolute;
-  top: 32px;
-  left: 35px;
+  top: 15px;
+  left: 20px;
 }
 </style>

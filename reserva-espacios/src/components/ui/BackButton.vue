@@ -11,8 +11,8 @@ const router = useRouter();
 
 <style scoped>
 .back-btn {
-  width: 35px;
-  height: 35px;
+  width: 30px;
+  height: 30px;
   cursor: pointer;
 }
 

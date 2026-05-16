@@ -4,8 +4,6 @@ import api from "@/services/api";
 import { useUserStore } from "@/stores/UserStore";
 import { useRouter } from "vue-router";
 
-import BackButton from "@/components/ui/BackButton.vue";
-import PageHeader from "@/components/ui/PageHeader.vue";
 import SpaceCard from "@/components/espacios/SpaceCard.vue";
 
 const router = useRouter();
@@ -48,9 +46,6 @@ onMounted(async () => {
 
       <div class="page">
 
-        <BackButton class="back-floating" />
-        <PageHeader titulo="MIS ESPACIOS" />
-
         <div class="container">
 
           <div v-if="loading" class="loading">
@@ -91,12 +86,6 @@ onMounted(async () => {
 .container {
   padding: 20px;
   padding-top: 20px;
-}
-
-.back-floating {
-  position: absolute;
-  top: 32px;
-  left: 35px;
 }
 
 .grid {

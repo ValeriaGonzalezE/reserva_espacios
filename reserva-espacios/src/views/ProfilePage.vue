@@ -4,10 +4,6 @@
 
       <div class="page">
 
-        <BackButton class="back-floating" />
-
-        <PageHeader titulo="MI PERFIL" />
-
         <div class="container">
 
           <ProfileCard :user="user" />
@@ -38,9 +34,7 @@
 <script setup>
 import ProfileCard from "@/components/users/ProfileCard.vue";
 
-import BackButton from "@/components/ui/BackButton.vue";
 import BaseButton from "@/components/ui/BaseButton.vue";
-import PageHeader from "@/components/ui/PageHeader.vue";
 
 import { useUserStore } from "@/stores/UserStore";
 import { useRouter } from "vue-router";
@@ -71,13 +65,6 @@ const logout = () => {
   background:
     linear-gradient(135deg, #0f0f0f, #1a0005);
   color: white;
-}
-
-.back-floating {
-  position: absolute;
-  top: 32px;
-  left: 35px;
-  z-index: 10;
 }
 
 .container {

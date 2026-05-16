@@ -5,7 +5,6 @@ import { useRoute, useRouter } from "vue-router";
 import api from "@/services/api";
 
 import BackButton from "@/components/ui/BackButton.vue";
-import PageHeader from "@/components/ui/PageHeader.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -72,8 +71,6 @@ const toggleEstado = async () => {
       <div class="page">
 
         <BackButton class="back-floating" />
-
-        <PageHeader titulo="EDITAR ESPACIO" />
 
         <div class="container">
 
@@ -161,8 +158,8 @@ const toggleEstado = async () => {
 
 .back-floating {
   position: absolute;
-  top: 32px;
-  left: 35px;
+  top: 15px;
+  left: 20px;
 }
 
 .container {

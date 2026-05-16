@@ -8,7 +8,6 @@ import BackButton from "@/components/ui/BackButton.vue";
 import BaseInput from "@/components/ui/BaseInput.vue";
 import BaseButton from "@/components/ui/BaseButton.vue";
 import TimeBlocks from "@/components/reservations/TimeBlocks.vue";
-import PageHeader from "@/components/ui/PageHeader.vue";
 
 const userStore = useUserStore();
 const route = useRoute();
@@ -102,7 +101,6 @@ const toMinutos = (hora) => {
       <div class="page">
 
         <BackButton class="back-floating" />
-        <PageHeader titulo="CREAR RESERVA" />
 
         <div class="container">
 
@@ -158,8 +156,8 @@ const toMinutos = (hora) => {
 
 .back-floating {
   position: absolute;
-  top: 32px;
-  left: 35px;
+  top: 15px;
+  left: 20px;
   z-index: 10;
 }
 </style>

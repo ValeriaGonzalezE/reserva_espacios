@@ -2,13 +2,13 @@
   <ion-page>
     <ion-content>
 
-      <AuthLayout>
+      <AuthLayout >
 
-        <template #left>
+        <template #left >
           REGÍSTRATE
         </template>
 
-        <h2>Crear Cuenta</h2>
+        <h2 class="layout">Crear Cuenta</h2>
 
         <p class="subtitle">
           Completa la información para crear tu cuenta
@@ -51,7 +51,7 @@
         ]" buttonText="Crear Cuenta" @submit="register" />
 
         <div class="links">
-          <router-link to="/">
+          <router-link to="/login">
             ¿Ya tienes cuenta? Inicia sesión
           </router-link>
         </div>
@@ -67,6 +67,7 @@ import AuthLayout from "@/components/users/AuthLayout.vue";
 import AuthForm from "@/components/users/AuthForm.vue";
 import api from "@/services/api";
 import { useRouter } from "vue-router";
+import { onMounted } from "vue";
 
 const router = useRouter();
 
@@ -103,6 +104,10 @@ const register = async (form) => {
 </script>
 
 <style scoped>
+.layout{
+  padding: 300px 30px 50px 30px;
+}
+
 .subtitle {
   color: #666;
   font-size: 14px;

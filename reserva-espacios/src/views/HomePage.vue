@@ -3,22 +3,6 @@
     <ion-content>
       <div class="layout">
 
-        <!-- HEADER -->
-        <div class="header">
-          <button @click="toggleMenu" class="btn-menu">☰</button>
-          <h2>Espacios Disponibles</h2>
-        </div>
-
-        <!-- MENU -->
-        <div class="menu" v-if="showMenu">
-          <p @click="goHome">🏠 Inicio</p>
-          <p @click="goCreateSpace">➕ Crear espacio</p>
-          <p @click="goMyReservations">📖 Mis reservas</p>
-          <p @click="goMySpaces">🏢 Mis espacios</p>
-          <p @click="goProfile">👤 Perfil</p>
-          <p @click="logout">🚪 Cerrar sesión</p>
-        </div>
-
         <!-- FILTROS -->
         <div class="filters">
 
@@ -145,82 +129,16 @@ onActivated(() => {
   obtenerEspacios();
 });
 
-// ===== MENU =====
-const showMenu = ref(false);
-
-const toggleMenu = () => showMenu.value = !showMenu.value;
-
-const cerrarMenu = () => showMenu.value = false;
-
 // ===== NAVEGACIÓN =====
-const goHome = () => {
-  cerrarMenu();
-  ionRouter.push("/home");
-};
-
-const goCreateSpace = () => {
-  cerrarMenu();
-  ionRouter.push("/create-space");
-};
-
-const goMyReservations = () => {
-  cerrarMenu();
-  ionRouter.push("/my-reservations");
-};
-
-const goMySpaces = () => {
-  cerrarMenu();
-  ionRouter.push("/my-spaces");
-};
-
-const goProfile = () => {
-  cerrarMenu();
-  ionRouter.push("/profile");
-};
-
 const verDetalle = (id) => {
   ionRouter.push(`/space/${id}`);
-};
-
-const logout = () => {
-  userStore.logout();
-  ionRouter.push("/login");
 };
 </script>
 
 <style scoped>
 .layout {
-  background: #0f0f0f;
+  padding: 20px;
   color: white;
-  min-height: 100vh;
-}
-
-/* HEADER */
-.header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: #c70039;
-  padding: 15px;
-}
-
-/* MENU */
-.menu {
-  position: absolute;
-  top: 60px; /* debajo del header */
-  left: 10px;
-  width: 220px;
-  background: #1e1e1e;
-  padding: 10px;
-  border-radius: 10px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-  z-index: 9999; /*lo pone por encima de todo */
-}
-
-.menu p {
-  padding: 10px;
-  border-bottom: 1px solid #333;
-  cursor: pointer;
 }
 
 /* FILTROS */
@@ -279,9 +197,4 @@ button.clear {
   color: #888;
 }
 
-/* MENU BTN */
-.btn-menu {
-  border-radius: 50%;
-  width: 35px;
-}
 </style>

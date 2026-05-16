@@ -1,8 +1,16 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
+
 import { RouteRecordRaw } from 'vue-router';
 
+// LAYOUT
+import AppLayout from '@/layouts/AppLayout.vue';
 
-//modulos del menu
+// PUBLICAS
+import LoginPage from '@/views/usuarios/LoginPage.vue';
+import RegistroPage from '@/views/usuarios/RegistroPage.vue';
+import ForgotPasswordPage from '@/views/usuarios/ForgotPasswordPage.vue';
+
+// PRIVADAS
 import HomePage from "@/views/HomePage.vue";
 import CreateReservation from "@/views/CreateReservation.vue";
 import ProfilePage from "@/views/ProfilePage.vue";
@@ -12,108 +20,132 @@ import MySpaces from "@/views/MySpaces.vue";
 import SpaceDetail from "@/views/SpaceDetail.vue";
 import SpaceReservations from "@/views/SpaceReservations.vue";
 import EditProfile from "@/views/EditProfile.vue";
-import SpaceEdit from '@/views/SpaceEdit.vue';
+import SpaceEdit from "@/views/SpaceEdit.vue";
 import ReprogramReservation from "@/views/ReprogramReservation.vue";
 
-// Usuarios
-import LoginPage from '../views/usuarios/LoginPage.vue';
-import RegistroPage from '../views/usuarios/RegistroPage.vue';
-import ForgotPasswordPage from '../views/usuarios/ForgotPasswordPage.vue';
-
 const routes: Array<RouteRecordRaw> = [
+
   {
-    path: '/',
-    redirect: '/login'
+    path: "/",
+    redirect: "/home"
   },
+
+  // PUBLICAS
   {
-    path: '/login',
+    path: "/login",
     component: LoginPage,
     meta: { public: true }
   },
+
   {
-    path: '/register',
+    path: "/register",
     component: RegistroPage,
     meta: { public: true }
   },
+
   {
-    path: '/forgot',
+    path: "/forgot",
     component: ForgotPasswordPage,
     meta: { public: true }
   },
-  //vistas menu
+
+  // LAYOUT PRIVADO
   {
-    path: "/home",
-    name: "Home",
-    component: HomePage
-  },
-  {
-    path: "/create",
-    name: "CreateReservation",
-    component: CreateReservation
-  },
-  {
-    path: "/profile",
-    name: "ProfilePage",
-    component: ProfilePage
-  },
-  {
-    path: "/create-space",
-    name: "CreateSpace",
-    component: CreateSpace
-  },
-  {
-    path: "/my-reservations",
-    name: "MyReservations",
-    component: MyReservations
-  },
-  {
-    path: "/my-spaces",
-    name: "MySpaces",
-    component: MySpaces
-  },
-  {
-    path: "/space/:id",
-    name: "SpaceDetail",
-    component: SpaceDetail
-  },
-  {
-    path: "/space-edit/:id",
-    name: "SpaceEdit",
-    component: SpaceEdit
-  },
-  {
-    path: "/space-reservations/:id",
-    name: "SpaceReservations",
-    component: SpaceReservations
-  },
-  {
-    path: "/edit-profile",
-    name: "EditProfile",
-    component: EditProfile
-  },
-  {
-    path: "/edit-reservation/:id",
-      name: "ReprogramReservation",
-    component: ReprogramReservation
+    path: "/",
+    component: AppLayout,
+
+    children: [
+
+      {
+        path: "home",
+        component: HomePage,
+        meta: { title: "INICIO" }
+      },
+
+      {
+        path: "create",
+        component: CreateReservation,
+        meta: { title: "CREAR RESERVA" }
+      },
+
+      {
+        path: "profile",
+        component: ProfilePage,
+        meta: { title: "PERFIL" }
+      },
+
+      {
+        path: "create-space",
+        component: CreateSpace,
+        meta: { title: "CREAR ESPACIO" }
+      },
+
+      {
+        path: "my-reservations",
+        component: MyReservations,
+        meta: { title: "MIS RESERVAS" }
+      },
+
+      {
+        path: "my-spaces",
+        component: MySpaces,
+        meta: { title: "MIS ESPACIOS" }
+      },
+
+      {
+        path: "space/:id",
+        component: SpaceDetail,
+        meta: { title: "DETALLE DEL ESPACIO" }
+      },
+
+      {
+        path: "space-edit/:id",
+        component: SpaceEdit,
+        meta: { title: "EDITAR ESPACIO" }
+      },
+
+      {
+        path: "space-reservations/:id",
+        component: SpaceReservations,
+        meta: { title: "RESERVAR ESPACIO" }
+      },
+
+      {
+        path: "edit-profile",
+        component: EditProfile,
+        meta: { title: "EDITAR PERFIL" }
+      },
+
+      {
+        path: "edit-reservation/:id",
+        component: ReprogramReservation,
+        meta: { title: "REPROGRAMAR RESERVACION" }
+      }
+
+    ]
   }
 ];
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(
+    import.meta.env.BASE_URL
+  ),
   routes
 });
 
-
-//  PROTECCIÓN DE RUTAS 
+// PROTECCION
 router.beforeEach((to, from, next) => {
+
   const isPublic = to.meta.public;
+
   const token = localStorage.getItem("token");
 
   if (!isPublic && !token) {
-    return next('/login');
+    return next("/login");
   }
 
   next();
+
 });
 
 export default router;

@@ -3,9 +3,7 @@ import { ref, onMounted } from "vue";
 import api from "@/services/api";
 import { useUserStore } from "@/stores/UserStore";
 
-import BackButton from "@/components/ui/BackButton.vue";
 import SpaceForm from "@/components/espacios/SpaceForm.vue";
-import PageHeader from "@/components/ui/PageHeader.vue";
 
 const userStore = useUserStore();
 
@@ -80,10 +78,6 @@ const eliminarFoto = (index) => {
 
       <div class="page">
 
-        <BackButton class="back-floating" />
-
-        <PageHeader titulo="CREAR ESPACIO" />
-
         <div class="container">
 
           <h2>Crear Espacio</h2>
@@ -122,13 +116,6 @@ const eliminarFoto = (index) => {
   padding: 20px;
   background: radial-gradient(circle at top, #1a0005, #0f0f0f);
   color: white;
-}
-
-.back-floating {
-  position: absolute;
-  top: 32px;
-  left: 35px;
-  z-index: 10;
 }
 
 .form-container {

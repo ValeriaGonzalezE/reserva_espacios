@@ -4,8 +4,6 @@ import { useRouter } from "vue-router";
 import api from "@/services/api";
 import { useUserStore } from "@/stores/UserStore";
 
-import BackButton from "@/components/ui/BackButton.vue";
-import PageHeader from "@/components/ui/PageHeader.vue";
 import ReservationCard from "@/components/reservations/ReservationCard.vue";
 import CalendarStrip from "@/components/reservations/CalendarStrip.vue";
 
@@ -59,9 +57,6 @@ onMounted(cargar);
 
       <div class="page">
 
-        <BackButton class="back-floating" />
-        <PageHeader titulo="MIS RESERVAS" />
-
         <div class="container">
 
           <!-- CALENDARIO -->
@@ -93,14 +88,6 @@ onMounted(cargar);
   padding: 20px;
   background: radial-gradient(circle at top, #1a0005, #0f0f0f);
   color: white;
-}
-
-/* BOTÓN FLOTANTE */
-.back-floating {
-  position: absolute;
-  top: 32px;
-  left: 35px;
-  z-index: 10;
 }
 
 /* CONTENEDOR */
