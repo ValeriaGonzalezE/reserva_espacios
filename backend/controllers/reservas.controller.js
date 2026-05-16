@@ -4,16 +4,29 @@ exports.getReservasPorEspacio = (req, res) => {
   model.getReservasPorEspacio(
     req.query.espacio_id,
     req.query.fecha,
-    (err, result) => res.json(result)
+    (err, result) => {
+      if (err) return res.status(500).json({ success: false });
+      res.json(result);
+    }
   );
 };
 
 exports.getReservasEspacio = (req, res) => {
-  model.getReservasEspacio(req.params.id, (err, result) => res.json(result));
+  model.getReservasEspacio(req.params.id, (err, result) => {
+    if (err) return res.status(500).json({ success: false });
+    res.json(result);
+  });
 };
 
 exports.createReserva = (req, res) => {
-  model.createReserva(req.body, (err, result) => {
+  const data = {
+    ...req.body,
+    usuario_id: req.user.id
+  };
+
+  model.createReserva(data, (err, result) => {
+    if (err) return res.status(500).json({ success: false });
+
     if (result?.ocupado) {
       return res.json({ success: false, message: "Horario ocupado" });
     }
@@ -34,9 +47,10 @@ exports.getMisReservas = (req, res) => {
 };
 
 exports.cancelarReserva = (req, res) => {
-  model.cancelarReserva(req.params.id, () =>
-    res.json({ success: true })
-  );
+  model.cancelarReserva(req.params.id, (err) => {
+    if (err) return res.status(500).json({ success: false });
+    res.json({ success: true });
+  });
 };
 
 exports.updateReserva = (req, res) => {

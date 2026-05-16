@@ -1,12 +1,25 @@
 const express = require("express");
 const router = express.Router();
 const controller = require("../controllers/reservas.controller");
+const validate = require("../middlewares/validate.middleware");
+const {
+  requireAuth,
+  requireSelfOrAdmin,
+  requireReservationOwnerOrAdmin
+} = require("../middlewares/auth.middleware");
+const {
+  reservaDisponibilidadQuerySchema,
+  reservaSchema,
+  reservaUpdateSchema
+} = require("../validators/schemas");
 
-router.get("/por-espacio", controller.getReservasPorEspacio);
+router.use(requireAuth);
+
+router.get("/por-espacio", validate(reservaDisponibilidadQuerySchema, "query"), controller.getReservasPorEspacio);
 router.get("/espacio/:id", controller.getReservasEspacio);
-router.post("/", controller.createReserva);
-router.get("/mis-reservas/:id", controller.getMisReservas);
-router.put("/cancelar/:id", controller.cancelarReserva);
-router.put("/:id", controller.updateReserva);
+router.post("/", validate(reservaSchema), controller.createReserva);
+router.get("/mis-reservas/:id", requireSelfOrAdmin(), controller.getMisReservas);
+router.put("/cancelar/:id", requireReservationOwnerOrAdmin(), controller.cancelarReserva);
+router.put("/:id", requireReservationOwnerOrAdmin(), validate(reservaUpdateSchema), controller.updateReserva);
 
 module.exports = router;

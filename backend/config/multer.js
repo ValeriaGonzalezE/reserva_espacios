@@ -10,4 +10,18 @@ const storage = multer.diskStorage({
   }
 });
 
-module.exports = multer({ storage });
+const fileFilter = (req, file, cb) => {
+  if (!file.mimetype.startsWith("image/")) {
+    return cb(new Error("Solo se permiten imagenes"));
+  }
+
+  cb(null, true);
+};
+
+module.exports = multer({
+  storage,
+  fileFilter,
+  limits: {
+    fileSize: 5 * 1024 * 1024
+  }
+});

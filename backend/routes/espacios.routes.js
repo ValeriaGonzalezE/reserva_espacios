@@ -2,17 +2,31 @@ const express = require("express");
 const router = express.Router();
 const controller = require("../controllers/espacios.controller");
 const upload = require("../config/multer");
+const validate = require("../middlewares/validate.middleware");
+const {
+  requireAuth,
+  requireSelfOrAdmin,
+  requireSpaceOwnerOrAdmin
+} = require("../middlewares/auth.middleware");
+const {
+  espacioQuerySchema,
+  espacioSchema,
+  espacioUpdateSchema,
+  comentarioSchema
+} = require("../validators/schemas");
 
 
-router.get("/", controller.getEspacios);
+router.use(requireAuth);
+
+router.get("/", validate(espacioQuerySchema, "query"), controller.getEspacios);
 router.get("/tipos", controller.getTipos);
 
-router.post("/", upload.array("fotos", 5), controller.createEspacio);
-router.get("/mis-espacios/:id", controller.getMisEspacios);
+router.post("/", upload.array("fotos", 5), validate(espacioSchema), controller.createEspacio);
+router.get("/mis-espacios/:id", requireSelfOrAdmin(), controller.getMisEspacios);
 router.get("/comentarios/:id", controller.getComentarios);
 router.get("/:id", controller.getEspacio);
-router.put("/:id", controller.updateEspacio);
-router.delete("/:id", controller.deleteEspacio);
-router.post("/comentarios", controller.createComentario);
+router.put("/:id", requireSpaceOwnerOrAdmin, validate(espacioUpdateSchema), controller.updateEspacio);
+router.delete("/:id", requireSpaceOwnerOrAdmin, controller.deleteEspacio);
+router.post("/comentarios", validate(comentarioSchema), controller.createComentario);
 
 module.exports = router;

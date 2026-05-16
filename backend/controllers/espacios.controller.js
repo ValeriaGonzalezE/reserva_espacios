@@ -3,6 +3,7 @@ const db = require("../config/db");
 
 exports.getEspacios = (req, res) => {
   model.getEspacios(req.query, (err, result) => {
+    if (err) return res.status(500).json({ success: false });
     res.json(result);
   });
 };
@@ -20,6 +21,12 @@ exports.getEspacio = (req, res) => {
       if (err) return res.status(500).json(err);
 
       const espacio = result[0];
+      if (!espacio) {
+        return res.status(404).json({
+          success: false,
+          message: "Espacio no encontrado"
+        });
+      }
 
       db.query(
         "SELECT url FROM espacio_fotos WHERE espacio_id = ?",
@@ -37,11 +44,17 @@ exports.getEspacio = (req, res) => {
 };
 
 exports.getTipos = (req, res) => {
-  model.getTipos((err, result) => res.json(result));
+  model.getTipos((err, result) => {
+    if (err) return res.status(500).json({ success: false });
+    res.json(result);
+  });
 };
 
 exports.createEspacio = (req, res) => {
-  const data = req.body;
+  const data = {
+    ...req.body,
+    usuario_id: req.user.id
+  };
 
   db.query(
     `INSERT INTO espacios 
@@ -101,19 +114,24 @@ exports.createEspacio = (req, res) => {
 };
 
 exports.getMisEspacios = (req, res) => {
-  model.getMisEspacios(req.params.id, (err, result) => res.json(result));
+  model.getMisEspacios(req.params.id, (err, result) => {
+    if (err) return res.status(500).json({ success: false });
+    res.json(result);
+  });
 };
 
 exports.updateEspacio = (req, res) => {
-  model.updateEspacio(req.params.id, req.body, () =>
-    res.json({ success: true })
-  );
+  model.updateEspacio(req.params.id, req.body, (err) => {
+    if (err) return res.status(500).json({ success: false });
+    res.json({ success: true });
+  });
 };
 
 exports.deleteEspacio = (req, res) => {
-  model.deleteEspacio(req.params.id, () =>
-    res.json({ success: true })
-  );
+  model.deleteEspacio(req.params.id, (err) => {
+    if (err) return res.status(500).json({ success: false });
+    res.json({ success: true });
+  });
 };
 
 exports.getComentarios = (req, res) => {
@@ -124,7 +142,12 @@ exports.getComentarios = (req, res) => {
 };
 
 exports.createComentario = (req, res) => {
-  model.createComentario(req.body, (err, result) => {
+  const data = {
+    ...req.body,
+    usuario_id: req.user.id
+  };
+
+  model.createComentario(data, (err, result) => {
     if (err) return res.status(500).json(err);
     res.json({ message: "Comentario creado" });
   });

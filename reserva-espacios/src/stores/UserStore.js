@@ -1,8 +1,17 @@
 import { defineStore } from "pinia";
 
+const getStoredUser = () => {
+  try {
+    return JSON.parse(localStorage.getItem("user")) || null;
+  } catch {
+    localStorage.removeItem("user");
+    return null;
+  }
+};
+
 export const useUserStore = defineStore("user", {
   state: () => ({
-    user: JSON.parse(localStorage.getItem("user")) || null,
+    user: getStoredUser(),
     token: localStorage.getItem("token") || null
   }),
 

@@ -1,10 +1,11 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const authModel = require("../models/auth.model");
+const asyncHandler = require("../utils/asyncHandler");
 
-const SECRET_KEY = "clave_secreta";
+const getJwtSecret = () => process.env.JWT_SECRET || "clave_desarrollo_reservas";
 
-exports.register = async (req, res) => {
+exports.register = asyncHandler(async (req, res) => {
 
   const { nombre, apellido, email, telefono, password } = req.body;
 
@@ -16,19 +17,26 @@ exports.register = async (req, res) => {
     { nombre, apellido, email, telefono, codigo, password: hashed }, (err) => {
 
       if (err) {
-        return res.status(500).json(err);
+        const isDuplicate = err.code === "ER_DUP_ENTRY";
+
+        return res.status(isDuplicate ? 409 : 500).json({
+          success: false,
+          message: isDuplicate ? "El correo ya esta registrado" : "No se pudo crear la cuenta"
+        });
       }
 
       res.json({ success: true });
 
     }
   );
-};
+});
 
 exports.login = (req, res) => {
   const { codigo, password } = req.body;
 
   authModel.findUser(codigo, async (err, result) => {
+    if (err) return res.status(500).json({ success: false });
+
     if (result.length === 0) return res.json({ success: false });
 
     const user = result[0];
@@ -36,8 +44,21 @@ exports.login = (req, res) => {
 
     if (!valid) return res.json({ success: false });
 
-    const token = jwt.sign({ id: user.id }, SECRET_KEY);
+    const token = jwt.sign(
+      { id: user.id, rol: user.rol },
+      getJwtSecret(),
+      { expiresIn: "8h" }
+    );
+
+    delete user.password;
 
     res.json({ success: true, token, user });
+  });
+};
+
+exports.forgotPassword = (req, res) => {
+  res.json({
+    success: true,
+    message: "Si el correo existe, se enviaran instrucciones de recuperacion"
   });
 };

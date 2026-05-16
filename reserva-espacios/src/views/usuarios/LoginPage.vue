@@ -42,6 +42,7 @@ import AuthForm from "@/components/users/AuthForm.vue";
 import api from "@/services/api";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/UserStore";
+import { IonPage, IonContent } from '@ionic/vue';
 
 const router = useRouter();
 const userStore = useUserStore();

@@ -4,7 +4,8 @@ exports.getReservasPorEspacio = (espacio_id, fecha, callback) => {
   db.query(
     `SELECT hora_inicio, hora_fin 
      FROM reservas 
-     WHERE espacio_id = ? AND fecha = ?`,
+     WHERE espacio_id = ? AND fecha = ?
+     AND estado = 'activa'`,
     [espacio_id, fecha],
     callback
   );
@@ -35,6 +36,8 @@ exports.createReserva = (data, callback) => {
   `;
 
   db.query(validar, [data.espacio_id, data.fecha, data.hora_fin, data.hora_inicio], (err, result) => {
+    if (err) return callback(err);
+
     if (result.length > 0) {
       return callback(null, { ocupado: true });
     }

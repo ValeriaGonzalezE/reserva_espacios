@@ -7,10 +7,23 @@ const controller =
 
 const upload =
   require("../config/multer");
+const validate =
+  require("../middlewares/validate.middleware");
+const {
+  requireAuth,
+  requireSelfOrAdmin
+} = require("../middlewares/auth.middleware");
+const {
+  usuarioUpdateSchema
+} = require("../validators/schemas");
+
+router.use(requireAuth);
 
 router.put(
   "/:id",
+  requireSelfOrAdmin(),
   upload.single("foto"),
+  validate(usuarioUpdateSchema),
   controller.updateUsuario
 );
 
