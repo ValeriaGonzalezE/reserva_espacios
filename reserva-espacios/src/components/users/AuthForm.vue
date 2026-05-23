@@ -27,6 +27,7 @@ const props = defineProps({
   buttonText: String
 });
 
+// Guarda dinamicamente los valores escritos en los campos definidos por el componente padre.
 const form = reactive({});
 
 // AGREGA @gmail.com SI EL USUARIO NO ESCRIBE DOMINIO

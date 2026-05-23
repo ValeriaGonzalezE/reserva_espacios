@@ -4,6 +4,7 @@ const props = defineProps({
   tipos: Array
 });
 
+// Emite el guardado al componente padre, que es quien realiza la peticion.
 const emit = defineEmits(["guardar"]);
 </script>
 

@@ -16,8 +16,10 @@ const {
 } = require("../validators/schemas");
 
 
+// Todas las rutas de espacios requieren sesion iniciada.
 router.use(requireAuth);
 
+// Endpoints para listar, crear, editar, eliminar y comentar espacios.
 router.get("/", validate(espacioQuerySchema, "query"), controller.getEspacios);
 router.get("/tipos", controller.getTipos);
 

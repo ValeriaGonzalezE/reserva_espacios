@@ -13,7 +13,7 @@ const userStore = useUserStore();
 const reservas = ref([]);
 const fechaSeleccionada = ref(new Date().toISOString().split("T")[0]);
 
-// cargar reservas
+// Carga todas las reservas asociadas al usuario autenticado.
 const cargar = async () => {
   try {
     const res = await api.get(`/reservas/mis-reservas/${userStore.user.id}`);
@@ -26,7 +26,7 @@ const cargar = async () => {
   }
 };
 
-// filtrar por fecha
+// Filtra en frontend las reservas para mostrar solo las del dia seleccionado.
 const reservasFiltradas = computed(() => {
   return reservas.value.filter(r => {
     if (!r.fecha) return false;
@@ -34,7 +34,7 @@ const reservasFiltradas = computed(() => {
   });
 });
 
-// cancelar
+// Cancela una reserva, confirma con el usuario y recarga la lista.
 const cancelar = async (id) => {
   if (!confirm("¿Cancelar reserva?")) return;
 
@@ -43,11 +43,12 @@ const cancelar = async (id) => {
   cargar();
 };
 
-// editar
+// Redirige a la vista de edicion o reprogramacion de la reserva.
 const editar = (reserva) => {
   router.push(`/edit-reservation/${reserva.id}`);
 };
 
+// Ejecuta la carga inicial de reservas al montar la vista.
 onMounted(cargar);
 </script>
 

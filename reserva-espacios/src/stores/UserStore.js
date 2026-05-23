@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 
+// Recupera el usuario persistido y evita errores si localStorage tiene JSON invalido.
 const getStoredUser = () => {
   try {
     return JSON.parse(localStorage.getItem("user")) || null;
@@ -16,6 +17,7 @@ export const useUserStore = defineStore("user", {
   }),
 
   actions: {
+    // Guarda usuario y token tanto en el estado global como en localStorage.
     setUser(user, token) {
       this.user = user;
       this.token = token;
@@ -24,6 +26,7 @@ export const useUserStore = defineStore("user", {
       localStorage.setItem("user", JSON.stringify(user));
     },
 
+    // Elimina la sesion activa del store y del almacenamiento local.
     logout() {
       this.user = null;
       this.token = null;

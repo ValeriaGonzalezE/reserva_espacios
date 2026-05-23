@@ -58,20 +58,21 @@ const defaultImg =
 
 const preview = ref("");
 
+// Crea una copia editable del usuario y separa la foto temporal de la contrasena nueva.
 const form = reactive({
   ...props.user,
   password: "",
   fotoFile: null
 });
 
-// preview URL
+// Si el usuario escribe una URL de imagen, la muestra de inmediato en la preview.
 watch(() => form.foto, (val) => {
   if (val && !form.fotoFile) {
     preview.value = val;
   }
 });
 
-// seleccionar archivo
+// Guarda el archivo seleccionado y genera una vista previa local.
 const seleccionarFoto = (e) => {
 
   const file = e.target.files[0];
@@ -82,7 +83,7 @@ const seleccionarFoto = (e) => {
 
 };
 
-// guardar
+// Empaqueta texto e imagen en FormData antes de emitir el envio al padre.
 const guardar = () => {
 
   const data = new FormData();

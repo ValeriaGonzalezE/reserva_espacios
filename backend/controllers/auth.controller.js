@@ -5,6 +5,7 @@ const asyncHandler = require("../utils/asyncHandler");
 
 const getJwtSecret = () => process.env.JWT_SECRET || "clave_desarrollo_reservas";
 
+// Registra un usuario nuevo, cifra la contrasena y controla correos duplicados.
 exports.register = asyncHandler(async (req, res) => {
 
   const { nombre, apellido, email, telefono, password } = req.body;
@@ -31,6 +32,7 @@ exports.register = asyncHandler(async (req, res) => {
   );
 });
 
+// Busca el usuario, compara la contrasena y devuelve token mas datos de sesion.
 exports.login = (req, res) => {
   const { codigo, password } = req.body;
 
@@ -56,6 +58,7 @@ exports.login = (req, res) => {
   });
 };
 
+// Responde de forma generica para no revelar si el correo existe en el sistema.
 exports.forgotPassword = (req, res) => {
   res.json({
     success: true,

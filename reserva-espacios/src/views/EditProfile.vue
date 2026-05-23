@@ -31,7 +31,7 @@ const userStore = useUserStore();
 
 const user = userStore.user;
 
-// guardar
+// Envia el perfil al backend y sincroniza los cambios en el store y localStorage.
 const guardar = async (formData) => {
 
   try {

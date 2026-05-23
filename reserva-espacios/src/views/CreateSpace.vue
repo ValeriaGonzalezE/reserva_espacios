@@ -19,6 +19,7 @@ const espacio = ref({
 
 const tipos = ref([]);
 
+// Carga los tipos de espacio que alimentan el formulario de creacion.
 onMounted(async () => {
   const res = await api.get("/espacios/tipos");
   console.log("TIPOS RESPONSE:", res);
@@ -26,6 +27,7 @@ onMounted(async () => {
   tipos.value = res.data;
 });
 
+// Empaqueta datos e imagenes en FormData para crear el espacio.
 const crear = async () => {
 
   console.log("CREAR EJECUTADO");
@@ -50,6 +52,7 @@ const crear = async () => {
 const fotos = ref([]);
 const previews = ref([]);
 
+// Agrega imagenes sin repetirlas y crea previews antes del envio.
 const onFileChange = (e) => {
   const files = Array.from(e.target.files);
 
@@ -66,6 +69,7 @@ const onFileChange = (e) => {
   e.target.value = ""; // permite volver a seleccionar el mismo archivo
 };
 
+// Elimina una foto seleccionada tanto del arreglo como de la vista previa.
 const eliminarFoto = (index) => {
   fotos.value.splice(index, 1);
   previews.value.splice(index, 1);

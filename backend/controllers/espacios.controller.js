@@ -1,6 +1,7 @@
 const model = require("../models/espacios.model");
 const db = require("../config/db");
 
+// Devuelve la lista de espacios aplicando los filtros enviados por query.
 exports.getEspacios = (req, res) => {
   model.getEspacios(req.query, (err, result) => {
     if (err) return res.status(500).json({ success: false });
@@ -8,6 +9,7 @@ exports.getEspacios = (req, res) => {
   });
 };
 
+// Obtiene un espacio especifico junto con su tipo y sus fotos registradas.
 exports.getEspacio = (req, res) => {
   const id = req.params.id;
 
@@ -43,6 +45,7 @@ exports.getEspacio = (req, res) => {
   );
 };
 
+// Entrega al frontend las categorias disponibles de espacios.
 exports.getTipos = (req, res) => {
   model.getTipos((err, result) => {
     if (err) return res.status(500).json({ success: false });
@@ -50,6 +53,7 @@ exports.getTipos = (req, res) => {
   });
 };
 
+// Crea el espacio usando al usuario autenticado como propietario y guarda sus fotos.
 exports.createEspacio = (req, res) => {
   const data = {
     ...req.body,
@@ -113,6 +117,7 @@ exports.createEspacio = (req, res) => {
   );
 };
 
+// Retorna los espacios que pertenecen al usuario indicado.
 exports.getMisEspacios = (req, res) => {
   model.getMisEspacios(req.params.id, (err, result) => {
     if (err) return res.status(500).json({ success: false });
@@ -120,6 +125,7 @@ exports.getMisEspacios = (req, res) => {
   });
 };
 
+// Actualiza la informacion editable de un espacio.
 exports.updateEspacio = (req, res) => {
   model.updateEspacio(req.params.id, req.body, (err) => {
     if (err) return res.status(500).json({ success: false });
@@ -127,6 +133,7 @@ exports.updateEspacio = (req, res) => {
   });
 };
 
+// Elimina un espacio cuando el usuario tiene permisos sobre el recurso.
 exports.deleteEspacio = (req, res) => {
   model.deleteEspacio(req.params.id, (err) => {
     if (err) return res.status(500).json({ success: false });
@@ -134,6 +141,7 @@ exports.deleteEspacio = (req, res) => {
   });
 };
 
+// Lista los comentarios asociados a un espacio.
 exports.getComentarios = (req, res) => {
   model.getComentarios(req.params.id, (err, result) => {
     if (err) return res.status(500).json(err);
@@ -141,6 +149,7 @@ exports.getComentarios = (req, res) => {
   });
 };
 
+// Crea un comentario tomando el usuario desde la sesion y no desde el body.
 exports.createComentario = (req, res) => {
   const data = {
     ...req.body,

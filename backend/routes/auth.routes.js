@@ -8,6 +8,7 @@ const {
   forgotPasswordSchema
 } = require("../validators/schemas");
 
+// Rutas publicas de autenticacion con validacion previa del body.
 router.post("/register", validate(registerSchema), controller.register);
 router.post("/login", validate(loginSchema), controller.login);
 router.post("/forgot-password", validate(forgotPasswordSchema), controller.forgotPassword);

@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const model =
   require("../models/usuarios.model");
 
+// Actualiza datos del perfil, procesa foto opcional y cifra la nueva contrasena.
 exports.updateUsuario = async (req, res) => {
 
   try {

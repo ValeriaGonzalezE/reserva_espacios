@@ -76,6 +76,7 @@ const fecha = ref(new Date().toISOString().split("T")[0]);
 const salones = ref([]);
 
 // ===== OBTENER ESPACIOS (FILTRO + GENERAL) =====
+// Consulta al backend los espacios disponibles usando los filtros seleccionados.
 const obtenerEspacios = async () => {
   try {
 
@@ -97,6 +98,7 @@ const obtenerEspacios = async () => {
 };
 
 // ===== CARGAR TIPOS =====
+// Carga desde el backend las categorias de espacios para el select de filtros.
 const cargarTipos = async () => {
   try {
     const res = await api.get("/espacios/tipos");
@@ -111,6 +113,7 @@ const cargarTipos = async () => {
 };
 
 // ===== LIMPIAR FILTROS =====
+// Reinicia filtros visuales y vuelve a pedir la lista general de espacios.
 const limpiarFiltros = () => {
   fecha.value = null;
   tipo.value = "";
@@ -120,16 +123,19 @@ const limpiarFiltros = () => {
 };
 
 // ===== CICLO DE VIDA =====
+// Al entrar a la vista carga tipos de espacios y resultados iniciales.
 onMounted(async () => {
   await cargarTipos();
   await obtenerEspacios();
 });
 
+// Si la vista se reactiva, refresca la lista de espacios.
 onActivated(() => {
   obtenerEspacios();
 });
 
 // ===== NAVEGACIÓN =====
+// Abre el detalle del espacio seleccionado.
 const verDetalle = (id) => {
   ionRouter.push(`/space/${id}`);
 };

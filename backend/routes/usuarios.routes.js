@@ -17,6 +17,7 @@ const {
   usuarioUpdateSchema
 } = require("../validators/schemas");
 
+// Protege las rutas de usuario y valida permisos sobre el perfil editado.
 router.use(requireAuth);
 
 router.put(

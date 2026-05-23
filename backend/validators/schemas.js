@@ -1,13 +1,16 @@
 const { z } = require("zod");
 
+// Convierte strings vacios en undefined para que los campos opcionales validen bien.
 const emptyToUndefined = (value) => (value === "" ? undefined : value);
 
+// Reglas base reutilizables para ids, textos, fechas y horas del sistema.
 const id = z.coerce.number().int().positive();
 const text = z.string().trim().min(1);
 const optionalText = z.preprocess(emptyToUndefined, z.string().trim().optional());
 const date = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
 const time = z.string().regex(/^\d{2}:\d{2}(:\d{2})?$/);
 
+// Esquemas centrales que validan autenticacion, espacios, reservas y perfil.
 const registerSchema = z.object({
   nombre: text.max(100),
   apellido: optionalText.default(""),

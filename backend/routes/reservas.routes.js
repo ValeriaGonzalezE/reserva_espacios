@@ -13,8 +13,10 @@ const {
   reservaUpdateSchema
 } = require("../validators/schemas");
 
+// Todas las rutas de reservas exigen autenticacion.
 router.use(requireAuth);
 
+// Endpoints para consultar disponibilidad y administrar reservas.
 router.get("/por-espacio", validate(reservaDisponibilidadQuerySchema, "query"), controller.getReservasPorEspacio);
 router.get("/espacio/:id", controller.getReservasEspacio);
 router.post("/", validate(reservaSchema), controller.createReserva);

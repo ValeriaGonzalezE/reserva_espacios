@@ -24,10 +24,7 @@
             placeholder: 'Ingresa tu contraseña'
           }
         ]" buttonText="Iniciar Sesión" @submit="login" />
-        <br>
         <div class="links">
-          <router-link to="/forgot">¿Olvidaste tu contraseña?</router-link>
-          <br>
           <router-link to="/register"> Crear cuenta</router-link>
         </div>
 
@@ -47,6 +44,7 @@ import { IonPage, IonContent } from '@ionic/vue';
 const router = useRouter();
 const userStore = useUserStore();
 
+// Autentica al usuario, guarda la sesion y redirige al inicio si todo sale bien.
 const login = async (form) => {
   const res = await api.post("/login", form);
 

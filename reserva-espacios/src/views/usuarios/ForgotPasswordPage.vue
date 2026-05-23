@@ -1,5 +1,4 @@
 <template>
-  <ion-page>
     <ion-content>
 
       <AuthLayout>
@@ -18,7 +17,6 @@
 
       </AuthLayout>
     </ion-content>
-  </ion-page>
 </template>
 
 <script setup>

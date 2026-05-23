@@ -12,6 +12,7 @@ const userStore = useUserStore();
 const espacios = ref([]);
 const loading = ref(true);
 
+// Trae del backend los espacios creados por el usuario actual.
 const cargarEspacios = async () => {
   try {
     if (!userStore.user?.id) return;
@@ -27,14 +28,17 @@ const cargarEspacios = async () => {
   }
 };
 
+// Navega a la pantalla donde se puede editar un espacio existente.
 const editarEspacio = (id) => {
   router.push(`/space-edit/${id}`);
 };
 
+// Navega a la vista que muestra las reservas hechas sobre ese espacio.
 const verReservas = (id) => {
   router.push(`/space-reservations/${id}`);
 };
 
+// Lanza la consulta inicial de espacios del usuario.
 onMounted(async () => {
   await cargarEspacios();
 });

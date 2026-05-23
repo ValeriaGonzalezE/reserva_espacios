@@ -1,65 +1,63 @@
 <template>
-  <ion-page>
-    <ion-content>
+  <ion-content>
 
-      <AuthLayout >
+    <AuthLayout>
 
-        <template #left >
-          REGÍSTRATE
-        </template>
+      <template #left>
+        REGÍSTRATE
+      </template>
 
-        <h2 class="layout">Crear Cuenta</h2>
+      <h2 class="layout">Crear Cuenta</h2>
 
-        <p class="subtitle">
-          Completa la información para crear tu cuenta
-        </p>
+      <p class="subtitle">
+        Completa la información para crear tu cuenta
+      </p>
 
-        <AuthForm :fields="[
-          {
-            model: 'nombre',
-            label: 'Nombre',
-            placeholder: 'Ej: Valeria'
-          },
-          {
-            model: 'apellido',
-            label: 'Apellido',
-            placeholder: 'Ej: González'
-          },
-          {
-            model: 'email',
-            label: 'Correo electrónico',
-            placeholder: 'ejemplo@gmail.com'
-          },
-          {
-            model: 'telefono',
-            label: 'Número de celular',
-            type: 'tel',
-            placeholder: '3001234567'
-          },
-          {
-            model: 'password',
-            label: 'Contraseña',
-            type: 'password',
-            placeholder: 'Mínimo 8 caracteres'
-          },
-          {
-            model: 'confirmPassword',
-            label: 'Confirmar contraseña',
-            type: 'password',
-            placeholder: 'Repite tu contraseña'
-          }
-        ]" buttonText="Crear Cuenta" @submit="register" />
+      <AuthForm :fields="[
+        {
+          model: 'nombre',
+          label: 'Nombre',
+          placeholder: 'Ej: Valeria'
+        },
+        {
+          model: 'apellido',
+          label: 'Apellido',
+          placeholder: 'Ej: González'
+        },
+        {
+          model: 'email',
+          label: 'Correo electrónico',
+          placeholder: 'ejemplo@gmail.com'
+        },
+        {
+          model: 'telefono',
+          label: 'Número de celular',
+          type: 'tel',
+          placeholder: '3001234567'
+        },
+        {
+          model: 'password',
+          label: 'Contraseña',
+          type: 'password',
+          placeholder: 'Mínimo 8 caracteres'
+        },
+        {
+          model: 'confirmPassword',
+          label: 'Confirmar contraseña',
+          type: 'password',
+          placeholder: 'Repite tu contraseña'
+        }
+      ]" buttonText="Crear Cuenta" @submit="register" />
 
-        <div class="links">
-          <router-link to="/login">
-            ¿Ya tienes cuenta? Inicia sesión
-          </router-link>
-        </div>
+      <div class="links">
+        <router-link to="/login">
+          ¿Ya tienes cuenta? Inicia sesión
+        </router-link>
+      </div>
 
-      </AuthLayout>
+    </AuthLayout>
 
-    </ion-content>
-  </ion-page>
+  </ion-content>
 </template>
 
 <script setup>
@@ -71,6 +69,7 @@ import { onMounted } from "vue";
 
 const router = useRouter();
 
+// Valida datos basicos del formulario antes de enviar el registro al backend.
 const register = async (form) => {
 
   // VALIDAR CONTRASEÑAS
@@ -85,11 +84,23 @@ const register = async (form) => {
   ) {
     form.email += "@gmail.com";
   }
+  if (!form.nombre?.trim()) {
+    return alert("El nombre es obligatorio");
+  }
 
-  try {
+  if (!form.email?.trim()) {
+    return alert("El correo es obligatorio");
+  }
 
-    const res = await api.post("/register", form);
+  if (!form.password || form.password.length < 8) {
+    return alert("La contraseña debe tener mínimo 8 caracteres");
+  }
 
+    try {
+      // Envia la informacion del nuevo usuario al endpoint de registro.
+
+      const res = await api.post("/register", form);
+    
     if (res.data.success) {
       alert("Cuenta creada correctamente");
       router.push("/");
@@ -104,7 +115,7 @@ const register = async (form) => {
 </script>
 
 <style scoped>
-.layout{
+.layout {
   padding: 300px 30px 50px 30px;
 }
 

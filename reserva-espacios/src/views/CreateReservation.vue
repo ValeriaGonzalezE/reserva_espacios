@@ -24,6 +24,7 @@ const usuario = ref({
   correo: ""
 });
 
+// Precarga el nombre del espacio y los datos del usuario autenticado al abrir la vista.
 onMounted(async () => {
   const res = await api.get("/espacios");
   const e = res.data.find(x => x.id == espacioSeleccionado.value);
@@ -36,12 +37,14 @@ onMounted(async () => {
   };
 });
 
+// Cada vez que cambia la fecha consulta los horarios ya ocupados para ese espacio.
 watch(fecha, (newVal) => {
   if (newVal) {
     cargarHorariosOcupados();
   }
 });
 
+// Trae desde el backend las reservas ya existentes del espacio en esa fecha.
 const cargarHorariosOcupados = async () => {
   const res = await api.get("/reservas/por-espacio", {
     params: { espacio_id: espacioSeleccionado.value, fecha: fecha.value }
@@ -49,6 +52,7 @@ const cargarHorariosOcupados = async () => {
   horariosOcupados.value = res.data;
 };
 
+// Verifica si el nuevo rango horario se cruza con alguna reserva existente.
 const hayCruce = () => {
   const inicio = toMinutos(horaInicio.value);
   const fin = toMinutos(horaFin.value);
@@ -61,6 +65,7 @@ const hayCruce = () => {
   });
 };
 
+// Valida campos y horario antes de enviar la nueva reserva al backend.
 const reservar = async () => {
 
   if (!fecha.value || !horaInicio.value || !horaFin.value) {
@@ -88,6 +93,7 @@ const reservar = async () => {
   alert("Reserva creada");
 };
 
+// Convierte una hora en minutos para facilitar la comparacion de rangos.
 const toMinutos = (hora) => {
   const [h, m] = hora.split(":").map(Number);
   return h * 60 + m;
