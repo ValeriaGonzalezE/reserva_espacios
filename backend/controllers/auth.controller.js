@@ -3,6 +3,9 @@ const jwt = require("jsonwebtoken");
 const authModel = require("../models/auth.model");
 const asyncHandler = require("../utils/asyncHandler");
 
+//if (condicionBackendNoCumple) { return res.status(400).json({ success: false, message: "mensaje backend" }); }
+// guardar o consultar en modelo res.json({ success: true });
+
 const getJwtSecret = () => process.env.JWT_SECRET || "clave_desarrollo_reservas";
 
 // Registra un usuario nuevo, cifra la contrasena y controla correos duplicados.

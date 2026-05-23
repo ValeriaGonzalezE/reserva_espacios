@@ -6,7 +6,10 @@
       <template #left>
         REGÍSTRATE
       </template>
+      <!-- if (condicionFrontendNoCumple) { return alert("mensaje"); } const res = await api.post("/ruta", datos); 
+       if (!res.data.success) { return alert(res.data.message); } alert("Proceso exitoso"); -->
 
+       
       <h2 class="layout">Crear Cuenta</h2>
 
       <p class="subtitle">
